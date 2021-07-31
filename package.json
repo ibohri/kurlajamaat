@@ -28,7 +28,8 @@
   "scripts": {
     "build": "cd client && yarn run build",
     "start": "node server/index.js",
-    "debug": "nodemon --inspect server/index.js"
+    "debug": "nodemon --inspect server/index.js",
+    "install": "yarn install && cd client && yarn install"
   },
   "author": "",
   "license": "ISC"
