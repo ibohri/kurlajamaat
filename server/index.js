@@ -10,10 +10,10 @@ const userRoutes = require("./routes/user.route");
 const loginRoutes = require("./routes/login.route");
 const settingsRoutes = require("./routes/settings.route");
 const passport = require("passport");
-
+const { configure } = require("./config/websocket.config");
 const distDir = "../client/build";
 const app = express();
-app.use(cors());
+const server = app.use(cors());
 app.use(express.json());
 app.use(
   express.urlencoded({
@@ -64,6 +64,8 @@ app.use(/^((?!(api)).)*/, (req, res) => {
   return;
 });
 
-app.listen(process.env.PORT || 3001, () => {
+const server = app.listen(process.env.PORT || 3001, () => {
   console.log(`Server started on port ${process.env.PORT || 3001}`);
 });
+
+configure(server);

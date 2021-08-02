@@ -9959,13 +9959,6 @@ react-transition-group@^4.4.0:
     loose-envify "^1.4.0"
     prop-types "^15.6.2"
 
-react-twitch-embed-video@^3.0.0:
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/react-twitch-embed-video/-/react-twitch-embed-video-3.0.0.tgz#09b728e3886ce926cc91ef3a0e41fccec411bd1a"
-  integrity sha512-kKB7GoPjnoWq4hbD3lue7wZAeZ3Pa3XbI7965q4bYLqdvj3sGJEGsDlyqNiFSfbCvYFRhNtYk+zykrMxrEhY7w==
-  dependencies:
-    window-or-global "^1.0.1"
-
 react-twitch-embed@^2.1.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/react-twitch-embed/-/react-twitch-embed-2.1.0.tgz#2bba8b50822acb827f3ab6251acca2a9b22bcdba"
@@ -12116,11 +12109,6 @@ which@^2.0.1, which@^2.0.2:
   integrity sha512-BLI3Tl1TW3Pvl70l3yq3Y64i+awpwXqsGBYWkkqMtnbXgrMD+yj7rhW0kuEDxzJaYXGjEW5ogapKNMEKNMjibA==
   dependencies:
     isexe "^2.0.0"
-
-window-or-global@^1.0.1:
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/window-or-global/-/window-or-global-1.0.1.tgz#dbe45ba2a291aabc56d62cf66c45b7fa322946de"
-  integrity sha1-2+RboqKRqrxW1iz2bEW3+jIpRt4=
 
 word-wrap@^1.2.3, word-wrap@~1.2.3:
   version "1.2.3"
