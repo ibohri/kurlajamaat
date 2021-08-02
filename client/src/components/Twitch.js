@@ -2,8 +2,9 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import "./Home.css";
 import { Loading } from "./Loading";
+import { TwitchEmbed } from "react-twitch-embed";
 
-export function Home() {
+export function TwitchHome() {
   const [videoRef, setVideoRef] = useState();
   const [isLoading, setIsLoading] = useState(true);
   useEffect(() => {
@@ -22,15 +23,13 @@ export function Home() {
     <>
       {videoRef && (
         <div className="full-size video-container">
-          <iframe
-            height="70%"
-            width="70%"
-            title="Video"
-            src={videoRef}
-            frameBorder="0"
-            allow="autoplay; fullscreen; picture-in-picture"
-            allowFullScreen
-          ></iframe>
+          <TwitchEmbed
+            channel="kurlajamaat"
+            id="kurlajamaat"
+            theme="dark"
+            muted
+            withChat={false}
+          />
         </div>
       )}
     </>

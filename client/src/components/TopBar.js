@@ -30,6 +30,12 @@ export function TopBar() {
                   <Nav.Link as={Link} to="/users">
                     Users
                   </Nav.Link>
+                  <Nav.Link as={Link} to="/twitch">
+                    Twitch
+                  </Nav.Link>
+                  <Nav.Link as={Link} to="/vimeo">
+                    Vimeo
+                  </Nav.Link>
                 </>
               )}
               <Nav.Link onClick={logout} as="span">
