@@ -2,20 +2,27 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import "./Home.css";
 import { Loading } from "./Loading";
+import { useAuth } from "../hooks/useProvideAuth";
 
 export function Home() {
   const [videoRef, setVideoRef] = useState();
+  const auth = useAuth();
   const [isLoading, setIsLoading] = useState(true);
   useEffect(() => {
     const getVideoURL = async () => {
       const { data } = await axios.get("/api/settings");
       if (data.isSuccess && data.settings) {
-        setVideoRef(data.settings.videoURL);
+        setVideoRef(
+          auth.user.relayFrom === "Masjid"
+            ? data.settings.videoURL
+            : data.settings.daarulImaratVideoURL
+        );
         setIsLoading(false);
       }
     };
     getVideoURL();
-  }, []);
+  }, [auth.user.relayFrom]);
+
   return isLoading ? (
     <Loading />
   ) : (

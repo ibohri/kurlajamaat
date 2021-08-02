@@ -64,8 +64,8 @@ app.use(/^((?!(api)).)*/, (req, res) => {
   return;
 });
 
-const server = app.listen(process.env.PORT || 3001, () => {
+app.listen(process.env.PORT || 3001, () => {
   console.log(`Server started on port ${process.env.PORT || 3001}`);
 });
 
-configure(server);
+setTimeout(() => configure(server), 5 * 1000);

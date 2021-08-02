@@ -45,13 +45,14 @@ router.get("/:id", async (req, res, next) => {
 // create
 router.post("/", async (req, res, next) => {
   try {
-    const { _id, username, name, password, role } = req.body;
+    const { _id, username, name, password, role, relayFrom } = req.body;
     const user = await userRepo.createUser({
       _id,
       username,
       name,
       password,
       role,
+      relayFrom,
     });
     res.json({
       isSuccess: true,

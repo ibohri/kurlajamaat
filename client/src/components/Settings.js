@@ -7,14 +7,14 @@ import { Loading } from "./Loading";
 
 export function Settings() {
   const history = useHistory();
-  const [videoURL, setVideoURL] = useState();
+  const [settings, setSettings] = useState();
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const getVideoURL = async () => {
       const { data } = await axios.get("/api/settings");
       if (data.isSuccess && data.settings) {
-        setVideoURL(data.settings.videoURL);
+        setSettings(data.settings);
         setIsLoading(false);
       }
     };
@@ -23,8 +23,11 @@ export function Settings() {
 
   const onSubmit = async (event) => {
     event.preventDefault();
-    const response = await axios.post("/api/settings", { videoURL });
-    if (response.isSuccess) {
+    const { data } = await axios.post("/api/settings", {
+      videoURL: settings.videoURL,
+      daarulImaratVideoURL: settings.daarulImaratVideoURL,
+    });
+    if (data.isSuccess) {
       history.push("/");
     }
   };
@@ -35,12 +38,39 @@ export function Settings() {
     <Form onSubmit={onSubmit}>
       <Form.Group as={Row} className="mb-3">
         <Form.Label column sm="2">
-          URL
+          Masjid Video URL
         </Form.Label>
         <Col sm="10">
           <Form.Control
-            value={videoURL}
-            onChange={(e) => setVideoURL(e.target.value)}
+            value={settings.videoURL}
+            onChange={(e) =>
+              setSettings((prev) => {
+                return {
+                  ...prev,
+                  videoURL: e.target.value,
+                };
+              })
+            }
+            type="text"
+            placeholder="URL"
+          />
+        </Col>
+      </Form.Group>
+      <Form.Group as={Row} className="mb-3">
+        <Form.Label column sm="2">
+          Dar-ul-Imarat Video URL
+        </Form.Label>
+        <Col sm="10">
+          <Form.Control
+            value={settings.daarulImaratVideoURL}
+            onChange={(e) =>
+              setSettings((prev) => {
+                return {
+                  ...prev,
+                  daarulImaratVideoURL: e.target.value,
+                };
+              })
+            }
             type="text"
             placeholder="URL"
           />

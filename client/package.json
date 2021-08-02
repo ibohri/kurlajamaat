@@ -19,7 +19,9 @@
     "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.3",
     "react-twitch-embed": "^2.1.0",
-    "web-vitals": "^1.0.1"
+    "react-use-websocket": "^2.7.1",
+    "web-vitals": "^1.0.1",
+    "websocket": "^1.0.34"
   },
   "proxy": "http://localhost:3001",
   "scripts": {

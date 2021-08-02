@@ -2,7 +2,14 @@ const { User } = require("../models/user.model");
 const bcrypt = require("bcrypt");
 
 // create
-module.exports.createUser = async ({ _id, username, password, name, role }) => {
+module.exports.createUser = async ({
+  _id,
+  username,
+  password,
+  name,
+  role,
+  relayFrom,
+}) => {
   const passwordHash = await getPasswordHash(password);
   if (_id) {
     return await User.findOneAndUpdate(
@@ -12,6 +19,7 @@ module.exports.createUser = async ({ _id, username, password, name, role }) => {
         password: passwordHash,
         name,
         role,
+        relayFrom,
       },
       { upsert: true, new: true, setDefaultsOnInsert: true }
     );
@@ -20,6 +28,7 @@ module.exports.createUser = async ({ _id, username, password, name, role }) => {
       username,
       password: passwordHash,
       name,
+      relayFrom,
       role,
     });
   }

@@ -22,6 +22,10 @@ const userSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
+  relayFrom: {
+    type: String,
+    required: true,
+  },
 });
 
 module.exports.User = new mongoose.model("User", userSchema);

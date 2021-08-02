@@ -5,6 +5,10 @@ const settingsSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  daarulImaratVideoURL: {
+    type: String,
+    required: true,
+  },
 });
 
 module.exports.Settings = new mongoose.model("Settings", settingsSchema);

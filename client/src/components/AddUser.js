@@ -111,6 +111,17 @@ export function AddUser() {
           </Form.Control.Feedback>
         </Col>
       </Form.Group>
+      <Form.Group as={Row} className="mb-3" controlId="formPlaintextPassword">
+        <Form.Label column sm="2">
+          Relay From
+        </Form.Label>
+        <Col sm="10">
+          <Form.Select defaultValue={user && user.relayFrom} name="relayFrom">
+            <option value="Masjid">Masjid</option>
+            <option value="Dar-ul-Imarat">Dar-ul-Imarat</option>
+          </Form.Select>
+        </Col>
+      </Form.Group>
       <Button type="submit" disabled={isButtonLoading} variant="primary">
         {isButtonLoading ? "Loading…" : "Submit"}
       </Button>

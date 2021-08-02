@@ -1,11 +1,13 @@
 const WebSocketServer = require("websocket").server;
-let wss;
+let ws;
 module.exports.configure = (server) => {
-  wss = new WebSocketServer({
+  const wss = new WebSocketServer({
     httpServer: server,
   });
 
-  wss.on("connection", (ws) => {});
+  wss.on("connection", (_ws) => {
+    ws = _ws;
+  });
 };
 
-module.exports.getServer = () => wss;
+module.exports.sendMessage = (data) => ws && ws.send(data);
