@@ -34,12 +34,6 @@ app.use(passport.session());
 app.use(express.static(path.join(__dirname, "/public")));
 app.use(express.static(path.join(__dirname, distDir)));
 
-app.get("/login", (req, res) => {
-  res.json({
-    login: true,
-  });
-});
-
 app.use(
   "/api/user",
   passport.authenticate("jwt-cookiecombo", {
