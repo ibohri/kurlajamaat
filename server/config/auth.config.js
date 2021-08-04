@@ -9,24 +9,33 @@ passport.use(
     {
       secretOrPublicKey: process.env.SECRET,
     },
-    (payload, done) => {
-      return done(null, payload.user);
+    async (payload, done) => {
+      const user =
+        payload.user &&
+        (await userRepo.findOne({
+          _id: payload.user._id,
+          sessionId: payload.user.sessionId,
+        }));
+      return done(null, user);
     }
   )
 );
 
 passport.use(
-  new LocalStrategy(async (username, password, done) => {
-    const user = await userRepo.findOne({
-      username: username,
-    });
+  new LocalStrategy(
+    { passReqToCallback: true },
+    async (req, username, password, done) => {
+      const user = await userRepo.findOne({
+        username: username,
+      });
 
-    if (!user) return done(null, false);
-    // authenticate user here
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) return done(null, false);
-    return done(null, user);
-  })
+      if (!user) return done(null, false);
+      // authenticate user here
+      const isMatch = await bcrypt.compare(password, user.password);
+      if (!isMatch) return done(null, false);
+      return done(null, user);
+    }
+  )
 );
 
 passport.serializeUser(function (user, done) {

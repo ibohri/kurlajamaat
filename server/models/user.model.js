@@ -26,6 +26,9 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  sessionId: {
+    type: String,
+  },
 });
 
 module.exports.User = new mongoose.model("User", userSchema);

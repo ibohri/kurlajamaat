@@ -64,6 +64,11 @@ module.exports.updateUser = async ({ username, password, name, role }) => {
   );
 };
 
+// updateOne
+module.exports.updateOne = async (query, updateData) => {
+  await User.findOneAndUpdate(query, updateData);
+};
+
 // delete
 module.exports.deleteUser = async (id) => {
   await User.findOneAndUpdate(

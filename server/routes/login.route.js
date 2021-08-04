@@ -3,6 +3,7 @@ const router = express.Router();
 const passport = require("passport");
 const jwt = require("jsonwebtoken");
 const { sendMessage } = require("../config/websocket.config");
+const userRepo = require("../repository/user.repository");
 
 router.post("/logout", async (req, res, next) => {
   try {
@@ -15,7 +16,9 @@ router.post("/logout", async (req, res, next) => {
   }
 });
 
-router.post("/login", passport.authenticate("local"), (req, res) => {
+router.post("/login", passport.authenticate("local"), async (req, res) => {
+  // update session id
+  await userRepo.updateOne({ _id: req.user._id }, { sessionId: req.sessionID });
   jwt.sign({ user: req.user }, process.env.SECRET, (err, token) => {
     if (err) return res.json(err);
 
