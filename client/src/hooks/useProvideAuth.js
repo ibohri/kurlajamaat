@@ -20,14 +20,15 @@ export function useProvideAuth() {
   const signout = useCallback(async () => {
     setUser(null);
     await api.get("/api/logout");
-    window.location.href = "/login";
-  }, []);
+    history.push("/login");
+  }, [history]);
 
   useEffect(() => {
     if (user) {
       socket.on(user._id, (data) => {
         if (data.type === "LOGOUT") {
           signout();
+          window.location.href = "/login";
         }
       });
     } else {
