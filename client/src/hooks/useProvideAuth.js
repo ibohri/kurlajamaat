@@ -20,8 +20,8 @@ export function useProvideAuth() {
   const signout = useCallback(async () => {
     setUser(null);
     await api.get("/api/logout");
-    history.push("/login");
-  }, [history]);
+    window.location.href = "/login";
+  }, []);
 
   useEffect(() => {
     if (user) {
