@@ -1,4 +1,4 @@
-import axios from "axios";
+import api from "../utils/api.util";
 import React, { useState, useEffect } from "react";
 import { Form, Col, Row, Button } from "react-bootstrap";
 import { useParams, useHistory } from "react-router-dom";
@@ -29,7 +29,7 @@ export function AddUser() {
         if (id) {
           data["_id"] = id;
         }
-        const response = await axios.post("/api/user", data);
+        const response = await api.post("/api/user", data);
         if (response.data.isSuccess) {
           history.push("/users");
         }
@@ -41,7 +41,7 @@ export function AddUser() {
 
   useEffect(() => {
     const getUser = async () => {
-      const { data } = await axios.get(`/api/user/${id}`);
+      const { data } = await api.get(`/api/user/${id}`);
       if (data.isSuccess) {
         setUser(data.user);
         setIsLoading(false);

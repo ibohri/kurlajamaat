@@ -10,10 +10,12 @@ const userRoutes = require("./routes/user.route");
 const loginRoutes = require("./routes/login.route");
 const settingsRoutes = require("./routes/settings.route");
 const passport = require("passport");
-const { configure } = require("./config/websocket.config");
+const { v4: uuidv4 } = require("uuid");
+const http = require("http");
+const { configure } = require("./socket");
 const distDir = "../client/build";
 const app = express();
-const server = app.use(cors());
+app.use(cors());
 app.use(express.json());
 app.use(
   express.urlencoded({
@@ -24,8 +26,9 @@ app.use(cookieParser(process.env.SECRET));
 app.use(
   require("express-session")({
     secret: "kjaamat",
-    resave: true,
+    resave: false,
     saveUninitialized: true,
+    genid: (express) => uuidv4(),
   })
 );
 app.use(passport.initialize());
@@ -34,20 +37,12 @@ app.use(passport.session());
 app.use(express.static(path.join(__dirname, "/public")));
 app.use(express.static(path.join(__dirname, distDir)));
 
-app.use(
-  "/api/user",
-  passport.authenticate("jwt-cookiecombo", {
-    session: false,
-    failureRedirect: "/login",
-  }),
-  userRoutes
-);
+app.use("/api/user", userRoutes);
 
 app.use(
   "/api/settings",
   passport.authenticate("jwt-cookiecombo", {
     session: false,
-    failureRedirect: "/login",
   }),
   settingsRoutes
 );
@@ -58,8 +53,10 @@ app.use(/^((?!(api)).)*/, (req, res) => {
   return;
 });
 
-app.listen(process.env.PORT || 3001, () => {
-  console.log(`Server started on port ${process.env.PORT || 3001}`);
-});
+const server = http.createServer(app);
 
-setTimeout(() => configure(server), 5 * 1000);
+configure(server);
+
+server.listen(3001, () => {
+  console.log("listening on *:3001");
+});

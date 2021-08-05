@@ -53,7 +53,7 @@ module.exports.findOne = async (query, includeDeleted) => {
 // update
 module.exports.updateUser = async ({ username, password, name, role }) => {
   const passwordHash = await getPasswordHash(password);
-  await User.findOneAndUpdate(
+  return await User.findOneAndUpdate(
     { username },
     {
       username,

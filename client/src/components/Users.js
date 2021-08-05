@@ -3,7 +3,7 @@ import { Table, Button, Modal } from "react-bootstrap";
 import { FiEdit2 } from "react-icons/fi";
 import { AiOutlineDelete } from "react-icons/ai";
 import "./Users.css";
-import axios from "axios";
+import api from "../utils/api.util";
 import { useHistory } from "react-router-dom";
 import { Loading } from "./Loading";
 
@@ -25,7 +25,7 @@ export function Users() {
 
   const deleteUser = async () => {
     setIsDeleteButtonLoading(true);
-    await axios.delete(`/api/user/${selectedUserId.current}`);
+    await api.delete(`/api/user/${selectedUserId.current}`);
 
     setUsers((prevUsers) =>
       prevUsers.filter((user) => user._id !== selectedUserId.current)
@@ -36,7 +36,7 @@ export function Users() {
 
   useEffect(() => {
     const fillUsers = async () => {
-      const { data } = await axios.get("/api/user");
+      const { data } = await api.get("/api/user");
       if (data.isSuccess) {
         setUsers(data.users);
       }

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useEffect } from "react";
 import { Form, Col, Row, Button } from "react-bootstrap";
-import axios from "axios";
+import api from "../utils/api.util";
 import { useHistory } from "react-router-dom";
 import { Loading } from "./Loading";
 
@@ -12,7 +12,7 @@ export function Settings() {
 
   useEffect(() => {
     const getVideoURL = async () => {
-      const { data } = await axios.get("/api/settings");
+      const { data } = await api.get("/api/settings");
       if (data.isSuccess && data.settings) {
         setSettings(data.settings);
         setIsLoading(false);
@@ -23,7 +23,7 @@ export function Settings() {
 
   const onSubmit = async (event) => {
     event.preventDefault();
-    const { data } = await axios.post("/api/settings", {
+    const { data } = await api.post("/api/settings", {
       videoURL: settings.videoURL,
       daarulImaratVideoURL: settings.daarulImaratVideoURL,
     });

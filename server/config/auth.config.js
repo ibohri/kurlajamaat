@@ -1,6 +1,7 @@
 const passport = require("passport");
 const LocalStrategy = require("passport-local").Strategy;
 const userRepo = require("../repository/user.repository");
+const sessionRepo = require("../repository/session.repository");
 const bcrypt = require("bcrypt");
 const JwtCookieComboStrategy = require("passport-jwt-cookiecombo");
 
@@ -8,15 +9,14 @@ passport.use(
   new JwtCookieComboStrategy(
     {
       secretOrPublicKey: process.env.SECRET,
+      passReqToCallback: true,
     },
-    async (payload, done) => {
-      const user =
-        payload.user &&
-        (await userRepo.findOne({
-          _id: payload.user._id,
-          sessionId: payload.user.sessionId,
-        }));
-      return done(null, user);
+    async (req, payload, done) => {
+      const sessionId = sessionRepo.getSession(payload.user._id);
+      if (sessionId !== req.sessionID) {
+        return done(null, null);
+      }
+      return done(null, payload.user);
     }
   )
 );

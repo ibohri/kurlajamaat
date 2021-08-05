@@ -16,6 +16,7 @@ import "./App.css";
 import { AddUser } from "./components/AddUser";
 import { Loading } from "./components/Loading";
 import { TwitchHome } from "./components/Twitch";
+import { Logout } from "./components/Logout";
 
 export function PrivateRoute({ children, ...rest }) {
   let auth = useAuth();
@@ -49,6 +50,9 @@ function App() {
             <Route path="/login">
               <Login />
             </Route>
+            <Route path="/logout">
+              <Logout />
+            </Route>
             <div className="child-container">
               <TopBar />
               <div className="full-size p-3">
@@ -58,9 +62,6 @@ function App() {
                 <PrivateRoute path="/settings">
                   <Settings />
                 </PrivateRoute>
-                <PrivateRoute path="/" exact={true}>
-                  <Home />
-                </PrivateRoute>
                 <PrivateRoute path="/editUser/:id?">
                   <AddUser />
                 </PrivateRoute>
@@ -68,6 +69,9 @@ function App() {
                   <TwitchHome />
                 </PrivateRoute>
                 <PrivateRoute path="/vimeo">
+                  <Home />
+                </PrivateRoute>
+                <PrivateRoute path="/" exact={true}>
                   <Home />
                 </PrivateRoute>
               </div>

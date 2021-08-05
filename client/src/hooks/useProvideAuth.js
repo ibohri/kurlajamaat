@@ -5,7 +5,9 @@ import {
   useEffect,
   useCallback,
 } from "react";
+import api from "../utils/api.util";
 import axios from "axios";
+import socket from "../socket";
 import { useHistory, useLocation } from "react-router-dom";
 
 export function useProvideAuth() {
@@ -14,10 +16,22 @@ export function useProvideAuth() {
   const history = useHistory();
   const location = useLocation();
   let { from } = location.state || { from: { pathname: "/" } };
+
   const signout = useCallback(async () => {
-    await axios.post("/api/logout");
+    setUser(null);
+    await api.get("/api/logout");
     history.push("/login");
   }, [history]);
+
+  useEffect(() => {
+    if (user) {
+      socket.on(user._id, (data) => {
+        if (data.type === "LOGOUT") {
+          signout();
+        }
+      });
+    }
+  }, [signout, user]);
 
   useEffect(() => {
     const getUser = async () => {
@@ -25,7 +39,7 @@ export function useProvideAuth() {
       if (userJson) {
         setUser(JSON.parse(userJson));
       } else {
-        const { data } = await axios.get(`api/user/current`);
+        const { data } = await api.get(`api/user/current`);
         if (data.isSuccess && data.user) {
           setUser(data.user);
           history.replace(from);
@@ -40,13 +54,19 @@ export function useProvideAuth() {
   }, []);
 
   const signin = async (username, password) => {
-    const { data } = await axios.post("/api/login", {
-      username,
-      password,
-    });
-    if (data && data.isSuccess) {
-      setUser(data.user);
-      history.replace(from);
+    try {
+      const { data } = await axios.post("/api/login", {
+        username,
+        password,
+      });
+      if (data && data.isSuccess) {
+        setUser(data.user);
+        history.replace(from);
+        return true;
+      }
+      return false;
+    } catch (ex) {
+      return false;
     }
   };
 

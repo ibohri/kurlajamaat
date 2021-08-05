@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import api from "../utils/api.util";
 import "./Home.css";
 import { Loading } from "./Loading";
 import { TwitchEmbed } from "react-twitch-embed";
@@ -9,7 +9,7 @@ export function TwitchHome() {
   const [isLoading, setIsLoading] = useState(true);
   useEffect(() => {
     const getVideoURL = async () => {
-      const { data } = await axios.get("/api/settings");
+      const { data } = await api.get("/api/settings");
       if (data.isSuccess && data.settings) {
         setVideoRef(data.settings.videoURL);
         setIsLoading(false);
