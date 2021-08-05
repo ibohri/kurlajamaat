@@ -57,6 +57,6 @@ const server = http.createServer(app);
 
 configure(server);
 
-server.listen(3001, () => {
+server.listen(process.env.PORT || 3001, () => {
   console.log("listening on *:3001");
 });
