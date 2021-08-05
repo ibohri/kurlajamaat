@@ -30,6 +30,8 @@ export function useProvideAuth() {
           signout();
         }
       });
+    } else {
+      socket.offAny();
     }
   }, [signout, user]);
 
