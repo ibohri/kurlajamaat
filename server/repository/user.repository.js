@@ -10,7 +10,7 @@ module.exports.createUser = async ({
   role,
   relayFrom,
 }) => {
-  const passwordHash = await getPasswordHash(password);
+  const passwordHash = await this.getPasswordHash(password);
   if (_id) {
     return await User.findOneAndUpdate(
       { _id },
@@ -52,7 +52,7 @@ module.exports.findOne = async (query, includeDeleted) => {
 
 // update
 module.exports.updateUser = async ({ username, password, name, role }) => {
-  const passwordHash = await getPasswordHash(password);
+  const passwordHash = await this.getPasswordHash(password);
   return await User.findOneAndUpdate(
     { username },
     {
@@ -80,7 +80,7 @@ module.exports.deleteUser = async (id) => {
 };
 
 // hash password
-async function getPasswordHash(password) {
+module.exports.getPasswordHash = async (password) => {
   const salt = await bcrypt.genSalt(10);
   return await bcrypt.hash(password, salt);
-}
+};
