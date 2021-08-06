@@ -19,6 +19,7 @@ export function useProvideAuth() {
 
   const signout = useCallback(async () => {
     setUser(null);
+    socket.offAny();
     await api.get("/api/logout");
     history.push("/login");
   }, [history]);
