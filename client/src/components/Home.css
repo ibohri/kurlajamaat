@@ -3,3 +3,10 @@
   justify-content: center;
   align-items: center;
 }
+.video-type__btn {
+  border-radius: 20px;
+}
+
+.video-type__btn--av {
+  margin-right: 20px;
+}

@@ -7,7 +7,9 @@ const settingsSchema = new mongoose.Schema({
   },
   daarulImaratVideoURL: {
     type: String,
-    required: true,
+  },
+  audioURL: {
+    type: String,
   },
 });
 

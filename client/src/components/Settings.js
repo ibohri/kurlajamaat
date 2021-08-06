@@ -26,6 +26,7 @@ export function Settings() {
     const { data } = await api.post("/api/settings", {
       videoURL: settings.videoURL,
       daarulImaratVideoURL: settings.daarulImaratVideoURL,
+      audioURL: settings.audioURL,
     });
     if (data.isSuccess) {
       history.push("/");
@@ -73,6 +74,26 @@ export function Settings() {
             }
             type="text"
             placeholder="URL"
+          />
+        </Col>
+      </Form.Group>
+      <Form.Group as={Row} className="mb-3">
+        <Form.Label column sm="2">
+          Audio URL
+        </Form.Label>
+        <Col sm="10">
+          <Form.Control
+            value={settings.audioURL}
+            onChange={(e) =>
+              setSettings((prev) => {
+                return {
+                  ...prev,
+                  audioURL: e.target.value,
+                };
+              })
+            }
+            type="text"
+            placeholder="Audio URL"
           />
         </Col>
       </Form.Group>

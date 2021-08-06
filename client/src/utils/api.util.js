@@ -2,6 +2,9 @@ import axios from "axios";
 
 let api = axios.create({
   baseURL: "/",
+  headers: {
+    "Content-Type": "application/json",
+  },
 });
 
 api.interceptors.response.use(

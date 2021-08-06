@@ -21,15 +21,15 @@ export function useProvideAuth() {
     setUser(null);
     socket.offAny();
     await api.get("/api/logout");
-    history.push("/login");
-  }, [history]);
+    window.location.href = "/login";
+  }, []);
 
   useEffect(() => {
     if (user) {
       socket.on(user._id, (data) => {
         if (data.type === "LOGOUT") {
           signout();
-          window.location.href = "/login";
+          // window.location.href = "/login";
         }
       });
     } else {
@@ -47,8 +47,6 @@ export function useProvideAuth() {
         if (data.isSuccess && data.user) {
           setUser(data.user);
           history.replace(from);
-        } else {
-          signout();
         }
       }
       setLoading(false);
@@ -74,11 +72,16 @@ export function useProvideAuth() {
     }
   };
 
+  const updateUser = (updatedUser) => {
+    setUser(updatedUser);
+  };
+
   return {
     user,
     loading,
     signin,
     signout,
+    updateUser,
   };
 }
 

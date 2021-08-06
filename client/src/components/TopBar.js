@@ -17,7 +17,9 @@ export function TopBar() {
         expand="lg"
       >
         <Container fluid>
-          <Navbar.Brand href="/">Kurla Jamaat</Navbar.Brand>
+          <Navbar.Brand as={Link} to="/">
+            Kurla Jamaat
+          </Navbar.Brand>
 
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
@@ -39,7 +41,7 @@ export function TopBar() {
                 </>
               )}
               <Nav.Link onClick={logout} as="span">
-                <FiLogOut />
+                Log Out
               </Nav.Link>
             </Nav>
           </Navbar.Collapse>

@@ -3,9 +3,10 @@ import { Loading } from "./Loading";
 import { useAuth } from "../hooks/useProvideAuth";
 import "./Login.css";
 import { Form, Col, Row, Button } from "react-bootstrap";
+import { Redirect } from "react-router-dom";
 
 export function Login() {
-  let { signin, loading } = useAuth();
+  let { signin, loading, user } = useAuth();
   const [validated, setValidated] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [showValidation, setShowValidation] = useState(false);
@@ -32,14 +33,20 @@ export function Login() {
     }
   };
 
-  return loading ? (
+  return user ? (
+    <Redirect
+      to={{
+        pathname: "/",
+      }}
+    ></Redirect>
+  ) : loading ? (
     <Loading />
   ) : (
     <div className="login-container">
       <h2 className="mb-4" style={{ textAlign: "center" }}>
         Kurla Jamaat
       </h2>
-      <div>
+      <div className="mb-3">
         <Form noValidate validated={validated} onSubmit={onSubmit}>
           <Form.Group as={Row} className="mb-3" controlId="formPlaintextEmail">
             <Form.Label column sm="2">
@@ -92,6 +99,11 @@ export function Login() {
             {isLoading ? "Loading…" : "Submit"}
           </Button>
         </Form>
+      </div>
+      <div style={{ lineHeight: "30px" }}>
+        <div style={{ fontWeight: "bold" }}>Contact Information</div>
+        <div>Murtuza Challwala - +91-8976293442</div>
+        <div>Khuzema Kamaal - +91-9819045287</div>
       </div>
     </div>
   );

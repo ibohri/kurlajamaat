@@ -25,7 +25,6 @@
     "web-vitals": "^1.0.1",
     "websocket": "^1.0.34"
   },
-  "proxy": "http://localhost:3001",
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",

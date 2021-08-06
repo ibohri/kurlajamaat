@@ -1,10 +1,14 @@
 const { Settings } = require("../models/settings.model");
 
 // create
-module.exports.updateSettings = async ({ videoURL, daarulImaratVideoURL }) => {
+module.exports.updateSettings = async ({
+  videoURL,
+  daarulImaratVideoURL,
+  audioURL,
+}) => {
   await Settings.findOneAndUpdate(
     {},
-    { videoURL, daarulImaratVideoURL },
+    { videoURL, daarulImaratVideoURL, audioURL },
     { upsert: true, new: true, setDefaultsOnInsert: true }
   );
 };
