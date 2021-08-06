@@ -17,26 +17,38 @@ import { AddUser } from "./components/AddUser";
 import { Loading } from "./components/Loading";
 import { TwitchHome } from "./components/Twitch";
 import { Logout } from "./components/Logout";
+import { ChangePassword } from "./components/ChangePassword";
 
 export function PrivateRoute({ children, ...rest }) {
   let auth = useAuth();
   return (
     <Route
       {...rest}
-      render={({ location }) =>
-        auth.loading ? (
-          <Loading />
-        ) : auth.user ? (
-          children
-        ) : (
+      render={({ location }) => {
+        if (auth.loading) {
+          return <Loading />;
+        }
+        if (auth.user) {
+          if (auth.user.mustChangePassword) {
+            return (
+              <Redirect
+                to={{
+                  pathname: "/changePassword",
+                }}
+              />
+            );
+          }
+          return children;
+        }
+        return (
           <Redirect
             to={{
               pathname: "/login",
               state: { from: location },
             }}
           />
-        )
-      }
+        );
+      }}
     />
   );
 }
@@ -52,6 +64,9 @@ function App() {
             </Route>
             <Route path="/logout">
               <Logout />
+            </Route>
+            <Route path="/changePassword">
+              <ChangePassword />
             </Route>
             <div className="child-container">
               <TopBar />
@@ -71,6 +86,7 @@ function App() {
                 <PrivateRoute path="/vimeo">
                   <Home />
                 </PrivateRoute>
+
                 <PrivateRoute path="/" exact={true}>
                   <Home />
                 </PrivateRoute>

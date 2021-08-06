@@ -25,9 +25,6 @@
     "websocket": "^1.0.34",
     "websockets": "^0.2.0"
   },
-  "engines": {
-    "node": "12.16.1"
-  },
   "devDependencies": {},
   "scripts": {
     "build": "cd client && yarn install && yarn run build",

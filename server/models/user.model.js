@@ -29,6 +29,10 @@ const userSchema = new mongoose.Schema({
   sessionId: {
     type: String,
   },
+  mustChangePassword: {
+    type: Boolean,
+    default: true,
+  },
 });
 
 module.exports.User = new mongoose.model("User", userSchema);

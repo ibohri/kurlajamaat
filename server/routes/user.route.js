@@ -138,4 +138,30 @@ router.delete(
   }
 );
 
+router.post(
+  "/changePassword",
+  passport.authenticate("jwt-cookiecombo", {
+    session: false,
+  }),
+  async (req, res, next) => {
+    try {
+      const hash = await userRepo.getPasswordHash(req.body.password);
+      await userRepo.updateOne(
+        {
+          _id: req.user._id,
+        },
+        {
+          password: hash,
+          mustChangePassword: false,
+        }
+      );
+      res.json({
+        isSuccess: true,
+      });
+    } catch (ex) {
+      next(ex);
+    }
+  }
+);
+
 module.exports = router;
