@@ -31,7 +31,7 @@ export function Home() {
   ) : (
     <>
       {settings && (
-        <Container className="h-100 flex-column d-flex" fluid>
+        <Container className="h-100 flex-column d-flex home-container" fluid>
           <Row className="mb-3">
             <Col>
               <Button
