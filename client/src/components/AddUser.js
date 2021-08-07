@@ -6,11 +6,14 @@ import { Loading } from "./Loading";
 
 export function AddUser() {
   const [user, setUser] = useState(null);
+  const [errors, setErrors] = useState([]);
   let { id } = useParams();
   const [isLoading, setIsLoading] = useState(!!id);
   const [isButtonLoading, setButtonIsLoading] = useState(false);
   const [validated, setValidated] = useState(false);
   const history = useHistory();
+
+  const onChange = () => setErrors([]);
 
   const handleSubmit = async (event) => {
     const form = event.currentTarget;
@@ -32,6 +35,8 @@ export function AddUser() {
         const response = await api.post("/api/user", data);
         if (response.data.isSuccess) {
           history.push("/users");
+        } else if (response.data.errors?.length) {
+          setErrors(response.data.errors);
         }
       } finally {
         setButtonIsLoading(false);
@@ -55,7 +60,12 @@ export function AddUser() {
   return isLoading ? (
     <Loading />
   ) : (
-    <Form noValidate validated={validated} onSubmit={handleSubmit}>
+    <Form
+      onChange={onChange}
+      noValidate
+      validated={validated}
+      onSubmit={handleSubmit}
+    >
       <Form.Group as={Row} className="mb-3" controlId="formPlaintextEmail">
         <Form.Label column sm="2">
           Name
@@ -122,6 +132,23 @@ export function AddUser() {
           </Form.Select>
         </Col>
       </Form.Group>
+      {errors?.length > 0 && (
+        <div className="errors">
+          {errors.map((err) => (
+            <Row>
+              <Col sm="2"></Col>
+              <Col
+                sm="10"
+                style={{
+                  color: "red",
+                }}
+              >
+                {err}
+              </Col>
+            </Row>
+          ))}
+        </div>
+      )}
       <Button type="submit" disabled={isButtonLoading} variant="primary">
         {isButtonLoading ? "Loading…" : "Submit"}
       </Button>

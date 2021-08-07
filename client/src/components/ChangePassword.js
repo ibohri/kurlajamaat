@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import api from "../utils/api.util";
+import "./Login.css";
 import { Loading } from "./Loading";
 import { useHistory, Redirect } from "react-router-dom";
 import { Form, Col, Row, Button } from "react-bootstrap";
@@ -71,63 +72,69 @@ export function ChangePassword() {
   ) : isLoading ? (
     <Loading />
   ) : (
-    <div className="login-container">
-      <h2 className="mb-4" style={{ textAlign: "center" }}>
-        Change Password
-      </h2>
-      <div>
-        <Form noValidate validated={validated} onSubmit={onSubmit}>
-          <Form.Group as={Row} className="mb-3" controlId="formPlaintextEmail">
-            <Form.Label column sm="3">
-              New Password
-            </Form.Label>
-            <Col sm="9">
-              <Form.Control
-                required
-                name="newPassword"
-                onInput={(e) => onPasswordChange(e)}
-                type="text"
-                placeholder="Password"
-              />
-              <Form.Control.Feedback type="invalid">
-                Please enter password.
-              </Form.Control.Feedback>
-            </Col>
-          </Form.Group>
-
-          <Form.Group
-            as={Row}
-            className="mb-3"
-            controlId="formPlaintextPassword"
-          >
-            <Form.Label column sm="3">
-              Confirm Password
-            </Form.Label>
-            <Col sm="9">
-              <Form.Control
-                required
-                onInput={(e) => onConfirmPasswordChange(e)}
-                name="confirmPassword"
-                type="password"
-                placeholder="Confirm Password"
-              />
-              <Form.Control.Feedback type="invalid">
-                Please confirm password.
-              </Form.Control.Feedback>
-            </Col>
-          </Form.Group>
-          {showValidation && (
-            <Row>
-              <Col sm="3"></Col>
-              <Col sm="9">
-                <div class="error-message">Password do not match.</div>
+    <div className="full-size login-container-bg">
+      <div className="login-container">
+        <img className="mb-3 logo" alt="logo" src={"./logo.jpeg"}></img>
+        <h2 className="mb-4" style={{ textAlign: "center" }}>
+          Change Password
+        </h2>
+        <div>
+          <Form noValidate validated={validated} onSubmit={onSubmit}>
+            <Form.Group
+              as={Row}
+              className="mb-3"
+              controlId="formPlaintextEmail"
+            >
+              <Form.Label column sm="12">
+                New Password
+              </Form.Label>
+              <Col sm="12">
+                <Form.Control
+                  required
+                  name="newPassword"
+                  onInput={(e) => onPasswordChange(e)}
+                  type="text"
+                  placeholder="Password"
+                />
+                <Form.Control.Feedback type="invalid">
+                  Please enter password.
+                </Form.Control.Feedback>
               </Col>
-            </Row>
-          )}
-          <Button type="submit" disabled={isLoading} variant="primary">
-            {isLoading ? "Loading…" : "Submit"}
-          </Button>
-        </Form>
+            </Form.Group>
+
+            <Form.Group
+              as={Row}
+              className="mb-3"
+              controlId="formPlaintextPassword"
+            >
+              <Form.Label column sm="12">
+                Confirm Password
+              </Form.Label>
+              <Col sm="12">
+                <Form.Control
+                  required
+                  onInput={(e) => onConfirmPasswordChange(e)}
+                  name="confirmPassword"
+                  type="password"
+                  placeholder="Confirm Password"
+                />
+                <Form.Control.Feedback type="invalid">
+                  Please confirm password.
+                </Form.Control.Feedback>
+              </Col>
+            </Form.Group>
+            {showValidation && (
+              <Row className="mb-3">
+                <Col sm="12">
+                  <div class="error-message">Password does not match.</div>
+                </Col>
+              </Row>
+            )}
+            <Button type="submit" disabled={isLoading} variant="primary">
+              {isLoading ? "Loading…" : "Submit"}
+            </Button>
+          </Form>
+        </div>
       </div>
     </div>
   );

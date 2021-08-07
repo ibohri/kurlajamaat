@@ -76,7 +76,15 @@ router.post(
   async (req, res, next) => {
     try {
       const { _id, username, name, password, role, relayFrom } = req.body;
-      const user = await userRepo.createUser({
+      let user = await userRepo.findOne({ username });
+      if (user && !_id) {
+        res.json({
+          isSuccess: false,
+          errors: ["User already exists"],
+        });
+        return;
+      }
+      user = await userRepo.createUser({
         _id,
         username,
         name,

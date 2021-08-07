@@ -63,7 +63,7 @@ export function useProvideAuth() {
       });
       if (data && data.isSuccess) {
         setUser(data.user);
-        history.replace(from);
+        history.push("/");
         return true;
       }
       return false;

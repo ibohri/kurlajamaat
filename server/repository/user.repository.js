@@ -71,12 +71,7 @@ module.exports.updateOne = async (query, updateData) => {
 
 // delete
 module.exports.deleteUser = async (id) => {
-  await User.findOneAndUpdate(
-    { _id: id },
-    {
-      isDeleted: true,
-    }
-  );
+  await User.deleteOne({ _id: id });
 };
 
 // hash password

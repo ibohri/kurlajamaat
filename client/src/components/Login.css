@@ -1,16 +1,28 @@
 .login-container {
-  max-width: 50%;
-  min-width: 300px;
-  margin: auto;
-  height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: center;
+  background: white;
+  padding: 30px;
+  height: auto;
+  border-radius: 15px;
+  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
 }
 
 .error-message {
   width: 100%;
   margin-top: 0.25rem;
-  font-size: 0.875em;
   color: #dc3545;
+}
+.login-container-bg {
+  background: url("login_bg.jpg") no-repeat center center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-size: cover;
+}
+.logo {
+  height: 100px;
+  width: 100px;
+  margin: auto;
 }

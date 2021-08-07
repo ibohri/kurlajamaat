@@ -42,68 +42,76 @@ export function Login() {
   ) : loading ? (
     <Loading />
   ) : (
-    <div className="login-container">
-      <h2 className="mb-4" style={{ textAlign: "center" }}>
-        Kurla Jamaat
-      </h2>
-      <div className="mb-3">
-        <Form noValidate validated={validated} onSubmit={onSubmit}>
-          <Form.Group as={Row} className="mb-3" controlId="formPlaintextEmail">
-            <Form.Label column sm="2">
-              User Name
-            </Form.Label>
-            <Col sm="10">
-              <Form.Control
-                required
-                name="username"
-                onInput={() => setShowValidation(false)}
-                type="text"
-                placeholder="User Name"
-              />
-              <Form.Control.Feedback type="invalid">
-                Please enter username.
-              </Form.Control.Feedback>
-            </Col>
-          </Form.Group>
-
-          <Form.Group
-            as={Row}
-            className="mb-3"
-            controlId="formPlaintextPassword"
-          >
-            <Form.Label column sm="2">
-              Password
-            </Form.Label>
-            <Col sm="10">
-              <Form.Control
-                required
-                onInput={() => setShowValidation(false)}
-                name="password"
-                type="password"
-                placeholder="Password"
-              />
-              <Form.Control.Feedback type="invalid">
-                Please enter password.
-              </Form.Control.Feedback>
-            </Col>
-          </Form.Group>
-          {showValidation && (
-            <Row>
-              <Col sm="2"></Col>
-              <Col sm="10">
-                <div class="error-message">Username or Password is invalid</div>
+    <div className="full-size login-container-bg">
+      <div className="login-container">
+        <img className="mb-3 logo" alt="logo" src={"./logo.jpeg"}></img>
+        <h2 className="mb-4" style={{ textAlign: "center" }}>
+          Kurla Jamaat
+        </h2>
+        <div className="mb-3">
+          <Form noValidate validated={validated} onSubmit={onSubmit}>
+            <Form.Group
+              as={Row}
+              className="mb-3"
+              controlId="formPlaintextEmail"
+            >
+              <Form.Label column sm="12">
+                User Name
+              </Form.Label>
+              <Col sm="12">
+                <Form.Control
+                  required
+                  name="username"
+                  onInput={() => setShowValidation(false)}
+                  type="text"
+                  placeholder="User Name"
+                />
+                <Form.Control.Feedback type="invalid">
+                  Please enter username.
+                </Form.Control.Feedback>
               </Col>
-            </Row>
-          )}
-          <Button type="submit" disabled={isLoading} variant="primary">
-            {isLoading ? "Loading…" : "Submit"}
-          </Button>
-        </Form>
-      </div>
-      <div style={{ lineHeight: "30px" }}>
-        <div style={{ fontWeight: "bold" }}>Contact Information</div>
-        <div>Murtuza Challwala - +91-8976293442</div>
-        <div>Khuzema Kamaal - +91-9819045287</div>
+            </Form.Group>
+
+            <Form.Group
+              as={Row}
+              className="mb-3"
+              controlId="formPlaintextPassword"
+            >
+              <Form.Label column sm="12">
+                Password
+              </Form.Label>
+              <Col sm="12">
+                <Form.Control
+                  required
+                  onInput={() => setShowValidation(false)}
+                  name="password"
+                  type="password"
+                  placeholder="Password"
+                />
+                <Form.Control.Feedback type="invalid">
+                  Please enter password.
+                </Form.Control.Feedback>
+              </Col>
+            </Form.Group>
+            {showValidation && (
+              <Row className="mb-3">
+                <Col sm="12">
+                  <div class="error-message">
+                    Username or Password is invalid
+                  </div>
+                </Col>
+              </Row>
+            )}
+            <Button type="submit" disabled={isLoading} variant="primary">
+              {isLoading ? "Loading…" : "Submit"}
+            </Button>
+          </Form>
+        </div>
+        <div style={{ lineHeight: "30px" }}>
+          <div style={{ fontWeight: "bold" }}>Contact Information</div>
+          <div>Murtuza Challwala - +91-8976293442</div>
+          <div>Khuzema Kamaal - +91-9819045287</div>
+        </div>
       </div>
     </div>
   );
