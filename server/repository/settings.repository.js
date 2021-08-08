@@ -1,11 +1,12 @@
 const { Settings } = require("../models/settings.model");
-
+let savedSettings;
 // create
 module.exports.updateSettings = async ({
   videoURL,
   daarulImaratVideoURL,
   audioURL,
 }) => {
+  savedSettings = null;
   await Settings.findOneAndUpdate(
     {},
     { videoURL, daarulImaratVideoURL, audioURL },
@@ -15,5 +16,8 @@ module.exports.updateSettings = async ({
 
 // get
 module.exports.getSettings = async () => {
-  return await Settings.findOne({});
+  if (!savedSettings) {
+    savedSettings = await Settings.findOne({});
+  }
+  return savedSettings;
 };
