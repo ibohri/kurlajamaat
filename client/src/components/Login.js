@@ -46,7 +46,7 @@ export function Login() {
       <div className="login-container">
         <img className="mb-3 logo" alt="logo" src={"./logo.jpeg"}></img>
         <h2 className="mb-4" style={{ textAlign: "center" }}>
-          Kurla Jamaat
+          Anjuman-E-Zainee Kurla
         </h2>
         <div className="mb-3">
           <Form noValidate validated={validated} onSubmit={onSubmit}>
