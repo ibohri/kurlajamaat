@@ -10,6 +10,8 @@ export function ChangePassword() {
   const [validated, setValidated] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [showValidation, setShowValidation] = useState(false);
+  const [showInvalidPasswordValidation, setShowInvalidPasswordValidation] =
+    useState(false);
   const history = useHistory();
   const password = useRef();
   const confimPassword = useRef();
@@ -49,6 +51,7 @@ export function ChangePassword() {
         setIsLoading(true);
         const { data: response } = await api.post("/api/user/changePassword", {
           password: data.newPassword,
+          oldPassword: data.oldPassword,
         });
         if (response.isSuccess) {
           auth.updateUser({
@@ -56,6 +59,8 @@ export function ChangePassword() {
             mustChangePassword: false,
           });
           history.push("/");
+        } else if (response.errors?.length) {
+          setShowInvalidPasswordValidation(true);
         }
       }
     } finally {
@@ -63,79 +68,75 @@ export function ChangePassword() {
     }
   };
 
-  return !auth.user?.mustChangePassword ? (
-    <Redirect
-      to={{
-        pathname: "/",
-      }}
-    ></Redirect>
-  ) : isLoading ? (
-    <Loading />
-  ) : (
-    <div className="full-size login-container-bg">
-      <div className="login-container">
-        <img className="mb-3 logo" alt="logo" src={"./logo.jpeg"}></img>
-        <h2 className="mb-4" style={{ textAlign: "center" }}>
-          Change Password
-        </h2>
-        <div>
-          <Form noValidate validated={validated} onSubmit={onSubmit}>
-            <Form.Group
-              as={Row}
-              className="mb-3"
-              controlId="formPlaintextEmail"
-            >
-              <Form.Label column sm="12">
-                New Password
-              </Form.Label>
-              <Col sm="12">
-                <Form.Control
-                  required
-                  name="newPassword"
-                  onInput={(e) => onPasswordChange(e)}
-                  type="text"
-                  placeholder="Password"
-                />
-                <Form.Control.Feedback type="invalid">
-                  Please enter password.
-                </Form.Control.Feedback>
-              </Col>
-            </Form.Group>
-
-            <Form.Group
-              as={Row}
-              className="mb-3"
-              controlId="formPlaintextPassword"
-            >
-              <Form.Label column sm="12">
-                Confirm Password
-              </Form.Label>
-              <Col sm="12">
-                <Form.Control
-                  required
-                  onInput={(e) => onConfirmPasswordChange(e)}
-                  name="confirmPassword"
-                  type="password"
-                  placeholder="Confirm Password"
-                />
-                <Form.Control.Feedback type="invalid">
-                  Please confirm password.
-                </Form.Control.Feedback>
-              </Col>
-            </Form.Group>
-            {showValidation && (
-              <Row className="mb-3">
-                <Col sm="12">
-                  <div class="error-message">Password does not match.</div>
-                </Col>
-              </Row>
+  return (
+    <div className="full-size">
+      <Form noValidate validated={validated} onSubmit={onSubmit}>
+        <Form.Group as={Row} className="mb-3" controlId="formPlaintextEmail">
+          <Form.Label column sm="12">
+            Old Password
+          </Form.Label>
+          <Col sm="12">
+            <Form.Control
+              required
+              name="oldPassword"
+              onInput={(e) => setShowInvalidPasswordValidation(false)}
+              type="password"
+              placeholder="Old Password"
+            />
+            <Form.Control.Feedback type="invalid">
+              Please enter password.
+            </Form.Control.Feedback>
+            {showInvalidPasswordValidation && (
+              <div class="error-message">Password is incorrect.</div>
             )}
-            <Button type="submit" disabled={isLoading} variant="primary">
-              {isLoading ? "Loading…" : "Submit"}
-            </Button>
-          </Form>
-        </div>
-      </div>
+          </Col>
+        </Form.Group>
+        <Form.Group as={Row} className="mb-3" controlId="formPlaintextEmail">
+          <Form.Label column sm="12">
+            New Password
+          </Form.Label>
+          <Col sm="12">
+            <Form.Control
+              required
+              name="newPassword"
+              onInput={(e) => onPasswordChange(e)}
+              type="text"
+              placeholder="Password"
+            />
+            <Form.Control.Feedback type="invalid">
+              Please enter new password.
+            </Form.Control.Feedback>
+          </Col>
+        </Form.Group>
+
+        <Form.Group as={Row} className="mb-3" controlId="formPlaintextPassword">
+          <Form.Label column sm="12">
+            Confirm Password
+          </Form.Label>
+          <Col sm="12">
+            <Form.Control
+              required
+              onInput={(e) => onConfirmPasswordChange(e)}
+              name="confirmPassword"
+              type="password"
+              placeholder="Confirm Password"
+            />
+            <Form.Control.Feedback type="invalid">
+              Please confirm password.
+            </Form.Control.Feedback>
+          </Col>
+        </Form.Group>
+        {showValidation && (
+          <Row className="mb-3">
+            <Col sm="12">
+              <div class="error-message">Password does not match.</div>
+            </Col>
+          </Row>
+        )}
+        <Button type="submit" disabled={isLoading} variant="primary">
+          {isLoading ? "Loading…" : "Submit"}
+        </Button>
+      </Form>
     </div>
   );
 }

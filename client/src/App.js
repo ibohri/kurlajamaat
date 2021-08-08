@@ -65,9 +65,7 @@ function App() {
             <Route path="/logout">
               <Logout />
             </Route>
-            {/* <Route path="/changePassword">
-              <ChangePassword />
-            </Route> */}
+
             <div className="child-container">
               <TopBar />
               <div className="full-size p-3">
@@ -85,6 +83,9 @@ function App() {
                 </PrivateRoute>
                 <PrivateRoute path="/vimeo">
                   <Home />
+                </PrivateRoute>
+                <PrivateRoute path="/changePassword">
+                  <ChangePassword />
                 </PrivateRoute>
 
                 <PrivateRoute path="/" exact={true}>

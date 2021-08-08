@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const userRepo = require("../repository/user.repository");
 const passport = require("passport");
+const bcrypt = require("bcrypt");
 const sessionRepo = require("../repository/session.repository");
 // get
 router.get(
@@ -153,6 +154,16 @@ router.post(
   }),
   async (req, res, next) => {
     try {
+      const user = await userRepo.findOne({ _id: req.user._id });
+      //   const salt = await bcrypt.genSalt(10);
+      const isMatch = await bcrypt.compare(req.body.oldPassword, user.password);
+      if (!isMatch) {
+        res.json({
+          isSuccess: false,
+          errors: ["Password is invalid"],
+        });
+        return;
+      }
       const hash = await userRepo.getPasswordHash(req.body.password);
       await userRepo.updateOne(
         {

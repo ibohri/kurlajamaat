@@ -40,6 +40,9 @@ export function TopBar() {
                   </Nav.Link>
                 </>
               )}
+              <Nav.Link as={Link} to="/changePassword">
+                Change Password
+              </Nav.Link>
               <Nav.Link onClick={logout} as="span">
                 Log Out
               </Nav.Link>
