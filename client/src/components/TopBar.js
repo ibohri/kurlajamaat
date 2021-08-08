@@ -11,14 +11,14 @@ export function TopBar() {
   return (
     !auth.loading && (
       <Navbar
-        className="justify-content-end"
+        className="justify-content-end top-bar"
         bg="dark"
         variant="dark"
         expand="lg"
       >
         <Container fluid>
-          <Navbar.Brand as={Link} to="/">
-            Kurla Jamaat
+          <Navbar.Brand className="brand-name" as={Link} to="/">
+            Anjuman-E-Zainee Kurla
           </Navbar.Brand>
 
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
