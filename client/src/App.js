@@ -29,15 +29,15 @@ export function PrivateRoute({ children, ...rest }) {
           return <Loading />;
         }
         if (auth.user) {
-          if (auth.user.mustChangePassword) {
-            return (
-              <Redirect
-                to={{
-                  pathname: "/changePassword",
-                }}
-              />
-            );
-          }
+          // if (auth.user.mustChangePassword) {
+          //   return (
+          //     <Redirect
+          //       to={{
+          //         pathname: "/changePassword",
+          //       }}
+          //     />
+          //   );
+          // }
           return children;
         }
         return (
@@ -65,9 +65,9 @@ function App() {
             <Route path="/logout">
               <Logout />
             </Route>
-            <Route path="/changePassword">
+            {/* <Route path="/changePassword">
               <ChangePassword />
-            </Route>
+            </Route> */}
             <div className="child-container">
               <TopBar />
               <div className="full-size p-3">
