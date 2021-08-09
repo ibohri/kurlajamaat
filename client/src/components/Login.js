@@ -56,7 +56,7 @@ export function Login() {
               controlId="formPlaintextEmail"
             >
               <Form.Label column sm="12">
-                User Name
+                HOF ITS Number
               </Form.Label>
               <Col sm="12">
                 <Form.Control
@@ -64,7 +64,7 @@ export function Login() {
                   name="username"
                   onInput={() => setShowValidation(false)}
                   type="text"
-                  placeholder="User Name"
+                  placeholder="HOF ITS Number"
                 />
                 <Form.Control.Feedback type="invalid">
                   Please enter username.
