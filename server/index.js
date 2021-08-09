@@ -28,9 +28,17 @@ app.use(
     secret: "kjaamat",
     resave: false,
     saveUninitialized: true,
-    genid: (express) => uuidv4(),
+    // genid: (express) => uuidv4(),
   })
 );
+
+app.get("*", function (req, res, next) {
+  if (req.headers["x-forwarded-proto"] !== "https") {
+    return res.redirect(["https://", req.get("Host"), req.url].join(""));
+  }
+  return next();
+});
+
 app.use(passport.initialize());
 app.use(passport.session());
 
