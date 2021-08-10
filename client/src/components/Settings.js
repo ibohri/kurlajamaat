@@ -100,7 +100,7 @@ export function Settings() {
       </Form.Group>
       <Form.Group as={Row} className="mb-3">
         <Form.Label column sm="2">
-          Youtube Channel Id
+          Youtube Video Id
         </Form.Label>
         <Col sm="10">
           <Form.Control
@@ -114,7 +114,7 @@ export function Settings() {
               })
             }
             type="text"
-            placeholder="Youtube Channel Id"
+            placeholder="Youtube Video Id"
           />
         </Col>
       </Form.Group>
