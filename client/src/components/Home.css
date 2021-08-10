@@ -10,3 +10,62 @@
 .video-type__btn--av {
   margin-right: 20px;
 }
+
+.video-container {
+  position: relative;
+  height: 360px;
+  width: 640px;
+}
+
+.placeholder {
+  position: absolute;
+  top: 0;
+  height: 360px;
+  background: black;
+  width: 640px;
+  opacity: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: all 2s 0s ease;
+}
+
+.full-screen {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+}
+
+.controls {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  display: none;
+  align-items: center;
+  opacity: 0.5;
+  background: black;
+  height: 40px;
+}
+
+.full-screen-btn {
+  margin-right: 10px;
+  font-weight: bolder;
+  cursor: pointer;
+}
+
+.video-container--playing .play-pause-btn {
+  display: none;
+}
+
+.video-container--playing:hover .play-pause-btn {
+  display: block;
+}
+.video-container--playing:hover .controls {
+  display: flex;
+}
+
+#player {
+  transition: all 5s 0s ease;
+}

@@ -11,6 +11,9 @@ const settingsSchema = new mongoose.Schema({
   audioURL: {
     type: String,
   },
+  youtubeChannelId: {
+    type: String,
+  },
 });
 
 module.exports.Settings = new mongoose.model("Settings", settingsSchema);

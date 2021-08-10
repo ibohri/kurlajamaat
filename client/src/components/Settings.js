@@ -27,6 +27,7 @@ export function Settings() {
       videoURL: settings.videoURL,
       daarulImaratVideoURL: settings.daarulImaratVideoURL,
       audioURL: settings.audioURL,
+      youtubeChannelId: settings.youtubeChannelId,
     });
     if (data.isSuccess) {
       history.push("/");
@@ -94,6 +95,26 @@ export function Settings() {
             }
             type="text"
             placeholder="Audio URL"
+          />
+        </Col>
+      </Form.Group>
+      <Form.Group as={Row} className="mb-3">
+        <Form.Label column sm="2">
+          Youtube Channel Id
+        </Form.Label>
+        <Col sm="10">
+          <Form.Control
+            value={settings.youtubeChannelId}
+            onChange={(e) =>
+              setSettings((prev) => {
+                return {
+                  ...prev,
+                  youtubeChannelId: e.target.value,
+                };
+              })
+            }
+            type="text"
+            placeholder="Youtube Channel Id"
           />
         </Col>
       </Form.Group>

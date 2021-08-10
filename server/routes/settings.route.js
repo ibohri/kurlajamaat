@@ -5,11 +5,13 @@ const settingsRepo = require("../repository/settings.repository");
 // update settings
 router.post("/", async (req, res, next) => {
   try {
-    const { videoURL, daarulImaratVideoURL, audioURL } = req.body;
+    const { videoURL, daarulImaratVideoURL, audioURL, youtubeChannelId } =
+      req.body;
     await settingsRepo.updateSettings({
       videoURL,
       daarulImaratVideoURL,
       audioURL,
+      youtubeChannelId,
     });
     res.json({
       isSuccess: true,

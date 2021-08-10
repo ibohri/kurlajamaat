@@ -5,11 +5,12 @@ module.exports.updateSettings = async ({
   videoURL,
   daarulImaratVideoURL,
   audioURL,
+  youtubeChannelId,
 }) => {
   savedSettings = null;
   await Settings.findOneAndUpdate(
     {},
-    { videoURL, daarulImaratVideoURL, audioURL },
+    { videoURL, daarulImaratVideoURL, audioURL, youtubeChannelId },
     { upsert: true, new: true, setDefaultsOnInsert: true }
   );
 };
