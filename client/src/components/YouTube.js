@@ -11,12 +11,35 @@ import { Loading } from "./Loading";
 
 export function YouTube({ settings }) {
   const [isPlaying, setIsPlaying] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [fullScreen, setFullScreen] = useState(false);
   const [volume, setVolume] = useState(80);
   const player = useRef();
   const playerElem = useRef();
   const dummyRef = useRef();
+  const timer = useRef();
+  const youtubeChannelId = settings.youtubeChannelId && "cajSxnjQC00";
+
+  useEffect(() => {
+    if (timer.current) clearTimeout(timer.current);
+
+    if (isHovered) {
+      timer.current = setTimeout(() => setIsHovered(false), 5 * 1000);
+    }
+  }, [isHovered]);
+
+  const onContainerClick = () => {
+    if (player.current) {
+      if (isPlaying) {
+        setIsPlaying(false);
+        player.current.pause();
+      } else {
+        setIsPlaying(true);
+        player.current.play();
+      }
+    }
+  };
 
   useEffect(() => {
     player.current?.setVolume(volume);
@@ -33,29 +56,34 @@ export function YouTube({ settings }) {
 
   useEffect(() => {
     if (player.current) player.current.destroy();
-    if (settings?.youtubeChannelId && playerElem.current) {
+    if (youtubeChannelId && playerElem.current) {
       player.current = new YTPlayer(playerElem.current, {
         controls: false,
         related: false,
         annotations: false,
       });
-      player.current.load(settings.youtubeChannelId);
+
       player.current.on("ended", () => {
         setIsPlaying(false);
       });
       player.current.on("cued", () => {
         setIsLoading(false);
       });
-    }
-  }, [settings?.youtubeChannelId, player]);
 
-  const goFullScreen = () => {
+      player.current.load(youtubeChannelId);
+    }
+  }, [youtubeChannelId, player]);
+
+  const goFullScreen = (e) => {
+    e.stopPropagation();
     document.documentElement.requestFullscreen();
     setFullScreen(true);
   };
 
-  const exitFullScreen = () => {
-    document.exitFullscreen();
+  const exitFullScreen = (e) => {
+    e.stopPropagation();
+
+    document.fullscreenElement && document.exitFullscreen();
     setFullScreen(false);
   };
 
@@ -63,34 +91,41 @@ export function YouTube({ settings }) {
     setVolume(val);
   };
 
+  const onControlsClick = (e) => {
+    e.stopPropagation();
+  };
+
+  const onContainerMouseOver = () => {
+    setIsHovered(true);
+  };
+
+  const onContainerMouseOut = () => {
+    setIsHovered(false);
+  };
+
   return (
     <div
+      onClick={onContainerClick}
+      onMouseMove={onContainerMouseOver}
+      onMouseOut={onContainerMouseOut}
       className={`video-container full-size ${
         isPlaying ? "video-container--playing" : ""
-      } ${fullScreen ? "full-screen" : ""}`}
+      } ${fullScreen ? "full-screen" : ""} ${
+        isHovered ? " video-container--hovered" : ""
+      }`}
     >
       <div tabIndex={0} ref={dummyRef}></div>
       <div ref={playerElem}></div>
       <div
         className="placeholder full-size"
         style={{
-          background: isPlaying ? "transparent" : "black",
+          opacity: isPlaying ? "0" : "1",
         }}
       >
         {isLoading ? (
           <Loading />
-        ) : !isPlaying ? (
-          <AiFillPlayCircle
-            className="play-pause-btn"
-            onClick={onPlayClick}
-            style={{
-              fontSize: "70px",
-              color: "#FF0000",
-              cursor: "pointer",
-            }}
-          />
         ) : (
-          <FaPauseCircle
+          <AiFillPlayCircle
             className="play-pause-btn"
             onClick={onPlayClick}
             style={{
@@ -101,7 +136,7 @@ export function YouTube({ settings }) {
           />
         )}
       </div>
-      <div className="controls">
+      <div className="controls" onClick={onControlsClick}>
         <div className="slider">
           <Slider
             value={volume}
