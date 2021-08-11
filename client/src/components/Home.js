@@ -6,14 +6,14 @@ import { Row, Col, Container, Button } from "react-bootstrap";
 import { useAuth } from "../hooks/useProvideAuth";
 import { YouTube } from "./YouTube";
 
-const VideoType = {
-  AudioVideo: 1,
-  AudioOnly: 2,
+const Server = {
+  ServerA: 1,
+  ServerB: 2,
 };
 
 export function Home() {
   const [settings, setSettings] = useState();
-  const [videoType, setVideoType] = useState(VideoType.AudioVideo);
+  const [videoType, setVideoType] = useState(Server.ServerA);
   const auth = useAuth();
   const [isLoading, setIsLoading] = useState(true);
   useEffect(() => {
@@ -38,19 +38,15 @@ export function Home() {
               <Col>
                 <Button
                   className="video-type__btn video-type__btn--av"
-                  variant={
-                    videoType === VideoType.AudioVideo ? "success" : "primary"
-                  }
-                  onClick={() => setVideoType(VideoType.AudioVideo)}
+                  variant={videoType === Server.ServerA ? "success" : "primary"}
+                  onClick={() => setVideoType(Server.ServerA)}
                 >
                   Server A
                 </Button>
                 <Button
                   className="video-type__btn"
-                  variant={
-                    videoType === VideoType.AudioOnly ? "success" : "primary"
-                  }
-                  onClick={() => setVideoType(VideoType.AudioOnly)}
+                  variant={videoType === Server.ServerB ? "success" : "primary"}
+                  onClick={() => setVideoType(Server.ServerB)}
                 >
                   Server B
                 </Button>
@@ -60,14 +56,16 @@ export function Home() {
 
           <Row style={{ flex: 1 }}>
             <Col>
-              {videoType === VideoType.AudioVideo ? (
+              {videoType === Server.ServerA ? (
+                <YouTube settings={settings}></YouTube>
+              ) : (
                 <div className="full-size video-container">
                   <iframe
                     height="100%"
                     width="100%"
                     title="Video"
                     src={
-                      videoType === VideoType.AudioVideo
+                      videoType === Server.ServerA
                         ? settings.videoURL
                         : settings.audioURL
                     }
@@ -76,8 +74,6 @@ export function Home() {
                     allowFullScreen
                   ></iframe>
                 </div>
-              ) : (
-                <YouTube settings={settings}></YouTube>
               )}
             </Col>
           </Row>
