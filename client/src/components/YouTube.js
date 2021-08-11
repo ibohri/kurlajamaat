@@ -19,7 +19,7 @@ export function YouTube({ settings }) {
   const playerElem = useRef();
   const dummyRef = useRef();
   const timer = useRef();
-  const youtubeChannelId = settings.youtubeChannelId && "cajSxnjQC00";
+  const youtubeChannelId = settings.youtubeChannelId;
 
   useEffect(() => {
     if (timer.current) clearTimeout(timer.current);
