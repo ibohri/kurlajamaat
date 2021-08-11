@@ -2,13 +2,16 @@ import React, { useState, useEffect, useRef } from "react";
 import "./Home.css";
 import YTPlayer from "yt-player";
 import { AiFillPlayCircle } from "react-icons/ai";
+import { FaPauseCircle } from "react-icons/fa";
 import { RiFullscreenLine } from "react-icons/ri";
 import { RiFullscreenExitLine } from "react-icons/ri";
 import Slider from "rc-slider";
 import "rc-slider/assets/index.css";
+import { Loading } from "./Loading";
 
 export function YouTube({ settings }) {
   const [isPlaying, setIsPlaying] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [fullScreen, setFullScreen] = useState(false);
   const [volume, setVolume] = useState(80);
   const player = useRef();
@@ -40,6 +43,9 @@ export function YouTube({ settings }) {
       player.current.on("ended", () => {
         setIsPlaying(false);
       });
+      player.current.on("cued", () => {
+        setIsLoading(false);
+      });
     }
   }, [settings?.youtubeChannelId, player]);
 
@@ -63,23 +69,37 @@ export function YouTube({ settings }) {
         isPlaying ? "video-container--playing" : ""
       } ${fullScreen ? "full-screen" : ""}`}
     >
-      <div tabindex={0} ref={dummyRef}></div>
+      <div tabIndex={0} ref={dummyRef}></div>
       <div ref={playerElem}></div>
       <div
         className="placeholder full-size"
         style={{
-          opacity: isPlaying ? "0" : "1",
+          background: isPlaying ? "transparent" : "black",
         }}
       >
-        <AiFillPlayCircle
-          className="play-pause-btn"
-          onClick={onPlayClick}
-          style={{
-            fontSize: "70px",
-            color: "#FF0000",
-            cursor: "pointer",
-          }}
-        />
+        {isLoading ? (
+          <Loading />
+        ) : !isPlaying ? (
+          <AiFillPlayCircle
+            className="play-pause-btn"
+            onClick={onPlayClick}
+            style={{
+              fontSize: "70px",
+              color: "#FF0000",
+              cursor: "pointer",
+            }}
+          />
+        ) : (
+          <FaPauseCircle
+            className="play-pause-btn"
+            onClick={onPlayClick}
+            style={{
+              fontSize: "70px",
+              color: "#FF0000",
+              cursor: "pointer",
+            }}
+          />
+        )}
       </div>
       <div className="controls">
         <div className="slider">
