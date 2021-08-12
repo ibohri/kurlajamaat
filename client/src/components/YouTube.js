@@ -70,6 +70,10 @@ export function YouTube({ settings }) {
         setIsLoading(false);
       });
 
+      player.current.on("paused", () => {
+        setIsPlaying(false);
+      });
+
       player.current.load(youtubeChannelId);
     }
   }, [youtubeChannelId, player]);
