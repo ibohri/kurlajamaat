@@ -107,9 +107,13 @@ export function YouTube({ settings }) {
     setIsHovered(false);
   };
 
+  const onPauseClick = () => {
+    player.current?.pause();
+  };
+
   return (
     <div
-      onClick={onContainerClick}
+      // onClick={onContainerClick}
       onMouseMove={onContainerMouseOver}
       onMouseOut={onContainerMouseOut}
       className={`video-container full-size ${
@@ -123,11 +127,21 @@ export function YouTube({ settings }) {
       <div
         className="placeholder full-size"
         style={{
-          opacity: isPlaying ? "0" : "1",
+          background: isPlaying ? "transparent" : "black",
         }}
       >
         {isLoading ? (
           <Loading />
+        ) : isPlaying ? (
+          <FaPauseCircle
+            className="play-pause-btn"
+            onClick={onPauseClick}
+            style={{
+              fontSize: "70px",
+              color: "#FF0000",
+              cursor: "pointer",
+            }}
+          />
         ) : (
           <AiFillPlayCircle
             className="play-pause-btn"
