@@ -25,21 +25,9 @@ export function YouTube({ settings }) {
     if (timer.current) clearTimeout(timer.current);
 
     if (isHovered) {
-      timer.current = setTimeout(() => setIsHovered(false), 5 * 1000);
+      timer.current = setTimeout(() => setIsHovered(false), 2 * 1000);
     }
   }, [isHovered]);
-
-  const onContainerClick = () => {
-    if (player.current) {
-      if (isPlaying) {
-        setIsPlaying(false);
-        player.current.pause();
-      } else {
-        setIsPlaying(true);
-        player.current.play();
-      }
-    }
-  };
 
   useEffect(() => {
     player.current?.setVolume(volume);
@@ -80,13 +68,14 @@ export function YouTube({ settings }) {
 
   const goFullScreen = (e) => {
     e.stopPropagation();
+    e.preventDefault();
     document.documentElement.requestFullscreen();
     setFullScreen(true);
   };
 
   const exitFullScreen = (e) => {
     e.stopPropagation();
-
+    e.preventDefault();
     document.fullscreenElement && document.exitFullscreen();
     setFullScreen(false);
   };
