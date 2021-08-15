@@ -48,6 +48,25 @@ router.get("/current", async (req, res, next) => {
   }
 });
 
+router.get(
+  "/logged-in-users",
+  passport.authenticate("jwt-cookiecombo", {
+    session: false,
+  }),
+  async (req, res, next) => {
+    try {
+      const userIds = Object.keys(sessionRepo.getAll());
+      const users = await userRepo.queryUsers({ _id: { $in: userIds } });
+      res.json({
+        isSuccess: true,
+        users,
+      });
+    } catch (err) {
+      next(err);
+    }
+  }
+);
+
 // get by id
 router.get(
   "/:id",

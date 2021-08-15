@@ -23,6 +23,12 @@ router.post("/login", passport.authenticate("local"), async (req, res) => {
     type: "LOGOUT",
   });
   sessionRepo.saveSession(req.user.id, req.sessionID);
+  await userRepo.updateOne(
+    { _id: req.user.id },
+    {
+      loggedInTime: Date.now(),
+    }
+  );
   const user = req.user;
   jwt.sign({ user }, process.env.SECRET, (err, token) => {
     if (err) return res.json(err);

@@ -18,6 +18,7 @@ import { Loading } from "./components/Loading";
 import { TwitchHome } from "./components/Twitch";
 import { Logout } from "./components/Logout";
 import { ChangePassword } from "./components/ChangePassword";
+import { LoggedInUsers } from "./components/LoggedInUsers";
 
 export function PrivateRoute({ children, ...rest }) {
   let auth = useAuth();
@@ -71,6 +72,9 @@ function App() {
               <div className="full-size p-3">
                 <PrivateRoute path="/users">
                   <Users />
+                </PrivateRoute>
+                <PrivateRoute path="/logged-in-users">
+                  <LoggedInUsers />
                 </PrivateRoute>
                 <PrivateRoute path="/settings">
                   <Settings />
