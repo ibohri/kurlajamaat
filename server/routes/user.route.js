@@ -202,4 +202,28 @@ router.post(
   }
 );
 
+router.post("/updateUsers", async (req, res) => {
+  try {
+    const users = req.body.Sheet1;
+
+    for (let user of users) {
+      const savedUser = await userRepo.findOne({ username: user.HOF_ID });
+      if (!savedUser) {
+        await userRepo.createUser({
+          username: user.HOF_ID,
+          name: user.Full_Name,
+          password: user.HOF_ID,
+          role: "User",
+          relayFrom: "Masjid",
+        });
+      }
+    }
+    res.json({
+      isSucess: true,
+    });
+  } catch (err) {
+    next(err);
+  }
+});
+
 module.exports = router;
