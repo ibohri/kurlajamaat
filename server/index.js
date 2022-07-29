@@ -34,7 +34,13 @@ app.use(
 
 app.enable("trust proxy");
 app.use((req, res, next) => {
-  req.secure ? next() : res.redirect("https://" + req.headers.host + req.url);
+  let host = req.headers.host;
+  if (host.includes("kurlajamaat") && !req.secure) {
+    host = host.indexOf("www") > -1 ? host.replace("www.", "") : host;
+    res.redirect("https://" + host + req.url);
+  } else {
+    next();
+  }
 });
 
 app.use(passport.initialize());
