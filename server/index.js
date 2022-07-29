@@ -35,8 +35,14 @@ app.use(
 app.enable("trust proxy");
 app.use((req, res, next) => {
   let host = req.headers.host;
-  if (host.includes("kurlajamaat") && !req.secure) {
-    host = host.indexOf("www") > -1 ? host.replace("www.", "") : host;
+  let needsRedirect = !req.secure;
+  if (host.includes("kurlajamaat")) {
+    if (host.indexOf("www") > -1) {
+      host = host.replace("www.", "");
+      needsRedirect = true;
+    }
+  }
+  if (needsRedirect) {
     res.redirect("https://" + host + req.url);
   } else {
     next();
