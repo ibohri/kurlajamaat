@@ -32,12 +32,10 @@ app.use(
   })
 );
 
-// app.get("*", function (req, res, next) {
-//   if (req.headers["x-forwarded-proto"] !== "https") {
-//     return res.redirect(["https://", req.get("Host"), req.url].join(""));
-//   }
-//   return next();
-// });
+app.enable("trust proxy");
+app.use((req, res, next) => {
+  req.secure ? next() : res.redirect("https://" + req.headers.host + req.url);
+});
 
 app.use(passport.initialize());
 app.use(passport.session());

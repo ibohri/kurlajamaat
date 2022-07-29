@@ -90,9 +90,9 @@ router.get(
 // create
 router.post(
   "/",
-  passport.authenticate("jwt-cookiecombo", {
-    session: false,
-  }),
+  // passport.authenticate("jwt-cookiecombo", {
+  //   session: false,
+  // }),
   async (req, res, next) => {
     try {
       const { _id, username, name, password, role, relayFrom } = req.body;
