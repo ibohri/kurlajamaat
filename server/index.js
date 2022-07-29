@@ -35,14 +35,18 @@ app.use(
 app.enable("trust proxy");
 app.use((req, res, next) => {
   let host = req.headers.host;
+  if (host.indexOf("www") > -1) {
+    host = host.replace("www.", "");
+    res.redirect(req.secure ? "https://" : "http://" + host + req.url);
+  } else {
+    next();
+  }
+});
+
+app.use((req, res, next) => {
+  let host = req.headers.host;
   const isProd = host.includes("kurlajamaat");
   let needsRedirect = isProd && !req.secure;
-  if (isProd) {
-    if (host.indexOf("www") > -1) {
-      host = host.replace("www.", "");
-      needsRedirect = true;
-    }
-  }
   if (needsRedirect) {
     res.redirect("https://" + host + req.url);
   } else {
