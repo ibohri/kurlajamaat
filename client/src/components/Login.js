@@ -109,8 +109,7 @@ export function Login() {
         </div>
         <div style={{ lineHeight: "30px" }}>
           <div style={{ fontWeight: "bold" }}>Contact Information</div>
-          <div>Khuzema Kamaal - +91-9819045287</div>
-          <div>Ammar Hatyari - +91-9967818852</div>
+          <div>Burhanuddin Kundawala - +91-9833980159</div>
         </div>
       </div>
     </div>
