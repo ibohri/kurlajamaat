@@ -7,7 +7,7 @@ import { Loading } from "./Loading";
 export function AddUser() {
   const [user, setUser] = useState(null);
   const [errors, setErrors] = useState([]);
-  const [isEnabled, setIsEnabled] = useState(false);
+  const [isEnabled, setIsEnabled] = useState(true);
   let { id } = useParams();
   const [isLoading, setIsLoading] = useState(!!id);
   const [isButtonLoading, setButtonIsLoading] = useState(false);
