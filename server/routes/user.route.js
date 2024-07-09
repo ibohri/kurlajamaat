@@ -4,6 +4,8 @@ const userRepo = require("../repository/user.repository");
 const passport = require("passport");
 const bcrypt = require("bcrypt");
 const sessionRepo = require("../repository/session.repository");
+const { emitMessage } = require("../socket");
+
 // get
 router.get(
   "/",
@@ -90,12 +92,13 @@ router.get(
 // create
 router.post(
   "/",
-  // passport.authenticate("jwt-cookiecombo", {
-  //   session: false,
-  // }),
+  passport.authenticate("jwt-cookiecombo", {
+    session: false,
+  }),
   async (req, res, next) => {
     try {
-      const { _id, username, name, password, role, relayFrom } = req.body;
+      const { _id, username, name, password, role, relayFrom, isEnabled } =
+        req.body;
       let user = await userRepo.findOne({ username });
       if (user && !_id) {
         res.json({
@@ -111,6 +114,7 @@ router.post(
         password,
         role,
         relayFrom,
+        isEnabled,
       });
       res.json({
         isSuccess: true,
@@ -130,13 +134,41 @@ router.put(
   }),
   async (req, res, next) => {
     try {
-      const { username, name, password, role } = req.body;
+      const { username, name, password, role, isEnabled } = req.body;
       const user = await userRepo.updateUser({
         username,
         name,
         password,
         role,
+        isEnabled,
       });
+      res.json({
+        isSuccess: true,
+        user,
+      });
+    } catch (ex) {
+      next(ex);
+    }
+  }
+);
+
+router.post(
+  "/enable-disable-user",
+  passport.authenticate("jwt-cookiecombo", {
+    session: false,
+  }),
+  async (req, res, next) => {
+    try {
+      const { isEnabled, _id } = req.body;
+      emitMessage(_id, {
+        type: "LOGOUT",
+      });
+      const user = await userRepo.updateOne(
+        { _id },
+        {
+          isEnabled,
+        }
+      );
       res.json({
         isSuccess: true,
         user,
@@ -207,15 +239,22 @@ router.post("/updateUsers", async (req, res) => {
     const users = req.body.Sheet1;
 
     for (let user of users) {
-      const savedUser = await userRepo.findOne({ username: user.HOF_ID });
+      const savedUser = await userRepo.findOne({ username: user.ITS_ID });
       if (!savedUser) {
         await userRepo.createUser({
-          username: user.HOF_ID,
+          username: user.ITS_ID,
           name: user.Full_Name,
-          password: user.HOF_ID,
+          password: user.ITS_ID,
           role: "User",
           relayFrom: "Masjid",
         });
+      } else {
+        await userRepo.updateOne(
+          { username: user.ITS_ID },
+          {
+            name: user.Full_Name,
+          }
+        );
       }
     }
     res.json({

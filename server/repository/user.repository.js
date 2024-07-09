@@ -9,6 +9,7 @@ module.exports.createUser = async ({
   name,
   role,
   relayFrom,
+  isEnabled,
 }) => {
   const passwordHash = await this.getPasswordHash(password);
   if (_id) {
@@ -20,6 +21,7 @@ module.exports.createUser = async ({
         name,
         role,
         relayFrom,
+        isEnabled,
       },
       { upsert: true, new: true, setDefaultsOnInsert: true }
     );
@@ -51,7 +53,13 @@ module.exports.findOne = async (query, includeDeleted) => {
 };
 
 // update
-module.exports.updateUser = async ({ username, password, name, role }) => {
+module.exports.updateUser = async ({
+  username,
+  password,
+  name,
+  role,
+  isEnabled,
+}) => {
   const passwordHash = await this.getPasswordHash(password);
   return await User.findOneAndUpdate(
     { username },
@@ -60,6 +68,7 @@ module.exports.updateUser = async ({ username, password, name, role }) => {
       password: passwordHash,
       name,
       role,
+      isEnabled,
     }
   );
 };

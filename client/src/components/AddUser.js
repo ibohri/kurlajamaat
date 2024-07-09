@@ -7,6 +7,7 @@ import { Loading } from "./Loading";
 export function AddUser() {
   const [user, setUser] = useState(null);
   const [errors, setErrors] = useState([]);
+  const [isEnabled, setIsEnabled] = useState(false);
   let { id } = useParams();
   const [isLoading, setIsLoading] = useState(!!id);
   const [isButtonLoading, setButtonIsLoading] = useState(false);
@@ -29,6 +30,7 @@ export function AddUser() {
         for (let [key, value] of formData.entries()) {
           data[key] = value;
         }
+        data.isEnabled = isEnabled;
         if (id) {
           data["_id"] = id;
         }
@@ -49,6 +51,7 @@ export function AddUser() {
       const { data } = await api.get(`/api/user/${id}`);
       if (data.isSuccess) {
         setUser(data.user);
+        setIsEnabled(data.user.isEnabled);
         setIsLoading(false);
       }
     };
@@ -119,6 +122,20 @@ export function AddUser() {
           <Form.Control.Feedback type="invalid">
             Please enter password.
           </Form.Control.Feedback>
+        </Col>
+      </Form.Group>
+      <Form.Group as={Row} className="mb-3" controlId="formIsEnabled">
+        <Form.Label column sm="2">
+          Is Enabled
+        </Form.Label>
+        <Col sm="10">
+          <Form.Check
+            type="checkbox"
+            checked={isEnabled}
+            onChange={() => {
+              setIsEnabled((prev) => !prev);
+            }}
+          />
         </Col>
       </Form.Group>
       <Form.Group as={Row} className="mb-3" controlId="formPlaintextPassword">

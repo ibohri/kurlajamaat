@@ -36,6 +36,10 @@ const userSchema = new mongoose.Schema({
   loggedInTime: {
     type: Date,
   },
+  isEnabled: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 userSchema.index({

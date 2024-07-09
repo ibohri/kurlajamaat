@@ -29,7 +29,8 @@ passport.use(
         username: username,
       });
 
-      if (!user) return done(null, false);
+      if (!user || (user.role !== "Admin" && !user.isEnabled))
+        return done(null, false);
       // authenticate user here
       const isMatch = await bcrypt.compare(password, user.password);
       if (!isMatch) return done(null, false);
