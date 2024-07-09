@@ -13,6 +13,8 @@ import { useHistory, useLocation } from "react-router-dom";
 export function useProvideAuth() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [resetToken, setResetToken] = useState(0);
+
   const history = useHistory();
   const location = useLocation();
   let { from } = location.state || { from: { pathname: "/" } };
@@ -29,6 +31,10 @@ export function useProvideAuth() {
       socket.on(user._id, (data) => {
         if (data.type === "LOGOUT") {
           signout();
+          // window.location.href = "/login";
+        }
+        if (data.type === "RESET_USER") {
+          setResetToken((prev) => ++prev);
           // window.location.href = "/login";
         }
       });
@@ -53,7 +59,7 @@ export function useProvideAuth() {
     };
     getUser();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [resetToken]);
 
   const signin = async (username, password) => {
     try {
@@ -75,6 +81,9 @@ export function useProvideAuth() {
   const updateUser = (updatedUser) => {
     setUser(updatedUser);
   };
+  const resetUser = () => {
+    setResetToken((prev) => ++prev);
+  };
 
   return {
     user,
@@ -82,6 +91,7 @@ export function useProvideAuth() {
     signin,
     signout,
     updateUser,
+    resetUser,
   };
 }
 

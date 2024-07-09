@@ -97,8 +97,16 @@ router.post(
   }),
   async (req, res, next) => {
     try {
-      const { _id, username, name, password, role, relayFrom, isEnabled } =
-        req.body;
+      const {
+        _id,
+        username,
+        name,
+        password,
+        role,
+        relayFrom,
+        isEnabled,
+        audioOnly,
+      } = req.body;
       let user = await userRepo.findOne({ username });
       if (user && !_id) {
         res.json({
@@ -115,6 +123,10 @@ router.post(
         role,
         relayFrom,
         isEnabled,
+        audioOnly,
+      });
+      emitMessage(_id, {
+        type: "RESET_USER",
       });
       res.json({
         isSuccess: true,
@@ -134,13 +146,14 @@ router.put(
   }),
   async (req, res, next) => {
     try {
-      const { username, name, password, role, isEnabled } = req.body;
+      const { username, name, password, role, isEnabled, audioOnly } = req.body;
       const user = await userRepo.updateUser({
         username,
         name,
         password,
         role,
         isEnabled,
+        audioOnly,
       });
       res.json({
         isSuccess: true,

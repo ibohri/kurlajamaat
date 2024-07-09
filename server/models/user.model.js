@@ -40,6 +40,10 @@ const userSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
+  audioOnly: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 userSchema.index({

@@ -8,6 +8,7 @@ import { RiFullscreenExitLine } from "react-icons/ri";
 import Slider from "rc-slider";
 import "rc-slider/assets/index.css";
 import { Loading } from "./Loading";
+import { useAuth } from "../hooks/useProvideAuth";
 
 export function YouTube({ settings }) {
   const [isPlaying, setIsPlaying] = useState(false);
@@ -19,7 +20,11 @@ export function YouTube({ settings }) {
   const playerElem = useRef();
   const dummyRef = useRef();
   const timer = useRef();
+  const auth = useAuth();
   const youtubeChannelId = settings.youtubeChannelId;
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useEffect(() => auth.resetUser(), []);
 
   useEffect(() => {
     if (timer.current) clearTimeout(timer.current);
@@ -116,7 +121,8 @@ export function YouTube({ settings }) {
       <div
         className="placeholder full-size"
         style={{
-          background: isPlaying ? "transparent" : "black",
+          background:
+            isPlaying && !auth.user.audioOnly ? "transparent" : "black",
         }}
       >
         {isLoading ? (

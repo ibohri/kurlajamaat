@@ -8,6 +8,7 @@ export function AddUser() {
   const [user, setUser] = useState(null);
   const [errors, setErrors] = useState([]);
   const [isEnabled, setIsEnabled] = useState(true);
+  const [audioOnly, setAudioOnly] = useState(false);
   let { id } = useParams();
   const [isLoading, setIsLoading] = useState(!!id);
   const [isButtonLoading, setButtonIsLoading] = useState(false);
@@ -31,6 +32,7 @@ export function AddUser() {
           data[key] = value;
         }
         data.isEnabled = isEnabled;
+        data.audioOnly = audioOnly;
         if (id) {
           data["_id"] = id;
         }
@@ -52,6 +54,7 @@ export function AddUser() {
       if (data.isSuccess) {
         setUser(data.user);
         setIsEnabled(data.user.isEnabled);
+        setAudioOnly(data.user.audioOnly);
         setIsLoading(false);
       }
     };
@@ -134,6 +137,20 @@ export function AddUser() {
             checked={isEnabled}
             onChange={() => {
               setIsEnabled((prev) => !prev);
+            }}
+          />
+        </Col>
+      </Form.Group>
+      <Form.Group as={Row} className="mb-3" controlId="formIsEnabled">
+        <Form.Label column sm="2">
+          Audio Only
+        </Form.Label>
+        <Col sm="10">
+          <Form.Check
+            type="checkbox"
+            checked={audioOnly}
+            onChange={() => {
+              setAudioOnly((prev) => !prev);
             }}
           />
         </Col>
