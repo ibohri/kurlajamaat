@@ -155,17 +155,6 @@ export function AddUser() {
           />
         </Col>
       </Form.Group>
-      <Form.Group as={Row} className="mb-3" controlId="formPlaintextPassword">
-        <Form.Label column sm="2">
-          Relay From
-        </Form.Label>
-        <Col sm="10">
-          <Form.Select defaultValue={user && user.relayFrom} name="relayFrom">
-            <option value="Masjid">Masjid</option>
-            <option value="Dar-ul-Imarat">Dar-ul-Imarat</option>
-          </Form.Select>
-        </Col>
-      </Form.Group>
       {errors?.length > 0 && (
         <div className="errors">
           {errors.map((err) => (

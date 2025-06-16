@@ -25,7 +25,6 @@ export function Settings() {
     event.preventDefault();
     const { data } = await api.post("/api/settings", {
       videoURL: settings.videoURL,
-      daarulImaratVideoURL: settings.daarulImaratVideoURL,
       audioURL: settings.audioURL,
       youtubeChannelId: settings.youtubeChannelId,
     });
@@ -50,26 +49,6 @@ export function Settings() {
                 return {
                   ...prev,
                   videoURL: e.target.value,
-                };
-              })
-            }
-            type="text"
-            placeholder="URL"
-          />
-        </Col>
-      </Form.Group>
-      <Form.Group as={Row} className="mb-3">
-        <Form.Label column sm="2">
-          Dar-ul-Imarat Video URL
-        </Form.Label>
-        <Col sm="10">
-          <Form.Control
-            value={settings.daarulImaratVideoURL}
-            onChange={(e) =>
-              setSettings((prev) => {
-                return {
-                  ...prev,
-                  daarulImaratVideoURL: e.target.value,
                 };
               })
             }

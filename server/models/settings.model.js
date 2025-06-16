@@ -5,9 +5,6 @@ const settingsSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  daarulImaratVideoURL: {
-    type: String,
-  },
   audioURL: {
     type: String,
   },
@@ -16,4 +13,4 @@ const settingsSchema = new mongoose.Schema({
   },
 });
 
-module.exports.Settings = new mongoose.model("Settings", settingsSchema);
+module.exports.Settings = mongoose.model("Settings", settingsSchema);

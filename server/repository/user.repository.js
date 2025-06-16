@@ -8,7 +8,6 @@ module.exports.createUser = async ({
   password,
   name,
   role,
-  relayFrom,
   isEnabled,
   audioOnly,
 }) => {
@@ -21,7 +20,6 @@ module.exports.createUser = async ({
         password: passwordHash,
         name,
         role,
-        relayFrom,
         isEnabled,
         audioOnly,
       },
@@ -32,10 +30,17 @@ module.exports.createUser = async ({
       username,
       password: passwordHash,
       name,
-      relayFrom,
       role,
+      isEnabled,
     });
   }
+};
+
+module.exports.deleteAllNonAdminUsers = async () => {
+  await User.deleteMany({
+    role: { $ne: "Admin" },
+    isDeleted: false,
+  });
 };
 
 // get all

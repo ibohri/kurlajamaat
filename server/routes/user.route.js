@@ -89,6 +89,49 @@ router.get(
   }
 );
 
+router.post("/upload", async (req, res, next) => {
+  try {
+    const users = req.body;
+    for (let user of users) {
+      let savedUser = await userRepo.findOne({ username: user.username });
+      if (!savedUser) {
+        savedUser = await userRepo.createUser({
+          username: user.username,
+          name: user.name,
+          password: user.password,
+          role: user.role || "User",
+          isEnabled: true,
+        });
+      } else {
+        savedUser = await userRepo.updateOne(
+          { username: user.username },
+          {
+            name: user.name,
+            role: user.role || "User",
+            isEnabled: true,
+          }
+        );
+      }
+    }
+    res.json({
+      isSuccess: true,
+    });
+  } catch (ex) {
+    next(ex);
+  }
+});
+
+router.delete("/delete-all", async (req, res, next) => {
+  try {
+    await userRepo.deleteAllNonAdminUsers();
+    res.json({
+      isSuccess: true,
+    });
+  } catch (ex) {
+    next(ex);
+  }
+});
+
 // create
 router.post(
   "/",
@@ -97,16 +140,8 @@ router.post(
   }),
   async (req, res, next) => {
     try {
-      const {
-        _id,
-        username,
-        name,
-        password,
-        role,
-        relayFrom,
-        isEnabled,
-        audioOnly,
-      } = req.body;
+      const { _id, username, name, password, role, isEnabled, audioOnly } =
+        req.body;
       let user = await userRepo.findOne({ username });
       if (user && !_id) {
         res.json({
@@ -121,7 +156,6 @@ router.post(
         name,
         password,
         role,
-        relayFrom,
         isEnabled,
         audioOnly,
       });
@@ -259,7 +293,6 @@ router.post("/updateUsers", async (req, res) => {
           name: user.Full_Name,
           password: user.ITS_ID,
           role: "User",
-          relayFrom: "Masjid",
         });
       } else {
         await userRepo.updateOne(

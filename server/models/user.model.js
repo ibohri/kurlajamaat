@@ -22,10 +22,6 @@ const userSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
-  relayFrom: {
-    type: String,
-    required: true,
-  },
   sessionId: {
     type: String,
   },
