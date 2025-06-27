@@ -96,9 +96,9 @@ router.post("/upload", async (req, res, next) => {
       let savedUser = await userRepo.findOne({ username: user.username });
       if (!savedUser) {
         savedUser = await userRepo.createUser({
-          username: user.username,
-          name: user.name,
-          password: user.password,
+          username: `${user.username}`,
+          name: `${user.name}`,
+          password: `${user.password}`,
           role: user.role || "User",
           isEnabled: true,
         });

@@ -11,6 +11,7 @@ module.exports.createUser = async ({
   isEnabled,
   audioOnly,
 }) => {
+  console.log("Creating user:", username, password, role, isEnabled, audioOnly);
   const passwordHash = await this.getPasswordHash(password);
   if (_id) {
     return await User.findOneAndUpdate(
