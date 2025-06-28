@@ -64,9 +64,9 @@ app.use("/api/user", userRoutes);
 
 app.use(
   "/api/settings",
-  passport.authenticate("jwt-cookiecombo", {
-    session: false,
-  }),
+//  passport.authenticate("jwt-cookiecombo", {
+//    session: false,
+//  }),
   settingsRoutes
 );
 app.use("/api", loginRoutes);
