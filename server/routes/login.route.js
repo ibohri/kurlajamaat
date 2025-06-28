@@ -8,6 +8,7 @@ const { emitMessage } = require("../socket");
 
 router.get("/logout", async (req, res, next) => {
   try {
+    if(!req.user.id) {res.sendStatus(200); return;}
     sessionRepo.removeSession(req.user.id);
     await req.logout();
     res.clearCookie("jwt", { path: "/", httpOnly: true });
