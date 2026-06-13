@@ -34,8 +34,8 @@ body {
 
 /* ── Top bar ── */
 .top-bar {
-  background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 60%, var(--primary-light) 100%);
-  border-bottom: 3px solid var(--accent);
+  background: #0a2a3a !important;
+  border-bottom: 3px solid #c9a84c;
   box-shadow: var(--shadow-md);
   padding: 0 1rem;
   min-height: 64px !important;
@@ -50,13 +50,13 @@ body {
   font-size: 1.2rem;
   font-weight: 700;
   letter-spacing: 0.01em;
-  color: #ffffff !important;
+  color: #c9a84c !important;
 }
 
-.brand-name:hover { color: var(--accent-light) !important; }
+.brand-name:hover { color: #f0d078 !important; }
 
 .top-bar .nav-link {
-  color: rgba(255,255,255,0.82) !important;
+  color: #c9a84c !important;
   font-size: 0.85rem;
   font-weight: 500;
   padding: 0.4rem 0.75rem !important;
@@ -65,8 +65,8 @@ body {
 }
 
 .top-bar .nav-link:hover {
-  background: rgba(255,255,255,0.12);
-  color: #ffffff !important;
+  background: rgba(201,168,76,0.15);
+  color: #f0d078 !important;
 }
 
 /* ── Utility ── */

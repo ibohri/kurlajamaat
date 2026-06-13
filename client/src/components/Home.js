@@ -28,15 +28,22 @@ export function Home() {
   if (!settings?.youtubeChannelId) {
     const isAdmin = auth.user?.role === "Admin";
     return (
-      <Container className="h-100 d-flex align-items-center justify-content-center" fluid>
+      <Container
+        className="h-100 d-flex align-items-center justify-content-center"
+        fluid
+      >
         <div style={{ textAlign: "center", color: "#ccc" }}>
           {isAdmin ? (
             <>
               <p>No YouTube video configured.</p>
-              <Link to="/settings">Go to Settings to add a YouTube Video ID</Link>
+              <Link to="/settings">
+                Go to Settings to add a YouTube Video ID
+              </Link>
             </>
           ) : (
-            <p>No live stream is currently available. Please check back later.</p>
+            <p>
+              No live stream is currently available. Please check back later.
+            </p>
           )}
         </div>
       </Container>
@@ -45,8 +52,8 @@ export function Home() {
 
   return (
     <Container className="h-100 flex-column d-flex home-container" fluid>
-      <Row style={{ flex: 1 }}>
-        <Col>
+      <Row style={{ flex: 1, margin: 0 }}>
+        <Col style={{ padding: 30 }}>
           <YouTube settings={settings} />
         </Col>
       </Row>

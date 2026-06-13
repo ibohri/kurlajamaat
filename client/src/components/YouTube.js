@@ -9,19 +9,21 @@ import Slider from "rc-slider";
 import "rc-slider/assets/index.css";
 import { Loading } from "./Loading";
 import { useAuth } from "../hooks/useProvideAuth";
+import { Link } from "react-router-dom";
 
 export function YouTube({ settings }) {
   const [isPlaying, setIsPlaying] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
+  const youtubeChannelId = settings.youtubeChannelId;
   const [isLoading, setIsLoading] = useState(!!youtubeChannelId);
   const [fullScreen, setFullScreen] = useState(false);
+  const [error, setError] = useState();
   const [volume, setVolume] = useState(80);
   const player = useRef();
   const playerElem = useRef();
   const dummyRef = useRef();
   const timer = useRef();
   const auth = useAuth();
-  const youtubeChannelId = settings.youtubeChannelId;
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => auth.resetUser(), []);
@@ -48,26 +50,35 @@ export function YouTube({ settings }) {
   };
 
   useEffect(() => {
-    if (player.current) player.current.destroy();
-    if (youtubeChannelId && playerElem.current) {
-      player.current = new YTPlayer(playerElem.current, {
-        controls: false,
-        related: false,
-        annotations: false,
-      });
+    try {
+      if (player.current) player.current.destroy();
+      if (youtubeChannelId && playerElem.current) {
+        player.current = new YTPlayer(playerElem.current, {
+          controls: false,
+          related: false,
+          annotations: false,
+        });
 
-      player.current.on("ended", () => {
-        setIsPlaying(false);
-      });
-      player.current.on("cued", () => {
-        setIsLoading(false);
-      });
+        player.current.on("ended", () => {
+          setIsPlaying(false);
+        });
+        player.current.on("cued", () => {
+          setIsLoading(false);
+        });
 
-      player.current.on("paused", () => {
-        setIsPlaying(false);
-      });
+        player.current.on("paused", () => {
+          setIsPlaying(false);
+        });
 
-      player.current.load(youtubeChannelId);
+        player.current.load(youtubeChannelId);
+      }
+    } catch (err) {
+      setError(
+        auth.user?.role === "Admin"
+          ? "Error loading YouTube video. Please check the Video ID in settings."
+          : "No live stream is currently available. Please check back later.",
+      );
+      setIsLoading(false);
     }
   }, [youtubeChannelId, player]);
 
@@ -106,73 +117,92 @@ export function YouTube({ settings }) {
   };
 
   return (
-    <div
-      // onClick={onContainerClick}
-      onMouseMove={onContainerMouseOver}
-      onMouseOut={onContainerMouseOut}
-      className={`video-container full-size ${
-        isPlaying ? "video-container--playing" : ""
-      } ${fullScreen ? "full-screen" : ""} ${
-        isHovered ? " video-container--hovered" : ""
-      }`}
-    >
-      <div tabIndex={0} ref={dummyRef}></div>
-      <div ref={playerElem}></div>
+    <React.Fragment>
       <div
-        className="placeholder full-size"
         style={{
-          background: isPlaying ? "transparent" : "black",
+          textAlign: "center",
+          color: "#ccc",
+          display: !error ? "none" : "block",
         }}
       >
-        {isLoading ? (
-          <Loading />
-        ) : isPlaying ? (
-          <FaPauseCircle
-            className="play-pause-btn"
-            onClick={onPauseClick}
-            style={{
-              fontSize: "70px",
-              color: "#FF0000",
-              cursor: "pointer",
-            }}
-          />
+        {auth.user?.role === "Admin" ? (
+          <>
+            <p>No YouTube video configured.</p>
+            <Link to="/settings">Go to Settings to add a YouTube Video ID</Link>
+          </>
         ) : (
-          <AiFillPlayCircle
-            className="play-pause-btn"
-            onClick={onPlayClick}
-            style={{
-              fontSize: "70px",
-              color: "#FF0000",
-              cursor: "pointer",
-            }}
-          />
+          <p>No live stream is currently available. Please check back later.</p>
         )}
       </div>
-      <div className="controls" onClick={onControlsClick}>
-        <div className="slider">
-          <Slider
-            value={volume}
-            onChange={onVolumeChange}
-            style={{ width: "100px", marginLeft: "20px" }}
-          />
-        </div>
-        <div style={{ flex: 1 }}></div>
-        <div className="full-screen-btn">
-          {!fullScreen ? (
-            <RiFullscreenLine
-              size={30}
-              color={"white"}
-              onClick={goFullScreen}
+      <div
+        style={{ display: error ? "none" : "block" }}
+        // onClick={onContainerClick}
+        onMouseMove={onContainerMouseOver}
+        onMouseOut={onContainerMouseOut}
+        className={`video-container full-size ${
+          isPlaying ? "video-container--playing" : ""
+        } ${fullScreen ? "full-screen" : ""} ${
+          isHovered ? " video-container--hovered" : ""
+        }`}
+      >
+        <div tabIndex={0} ref={dummyRef}></div>
+        <div ref={playerElem}></div>
+        <div
+          className="placeholder full-size"
+          style={{
+            background: isPlaying ? "transparent" : "black",
+          }}
+        >
+          {isLoading ? (
+            <Loading />
+          ) : isPlaying ? (
+            <FaPauseCircle
+              className="play-pause-btn"
+              onClick={onPauseClick}
+              style={{
+                fontSize: "70px",
+                color: "#FF0000",
+                cursor: "pointer",
+              }}
             />
           ) : (
-            <RiFullscreenExitLine
-              size={30}
-              color={"white"}
-              onClick={exitFullScreen}
+            <AiFillPlayCircle
+              className="play-pause-btn"
+              onClick={onPlayClick}
+              style={{
+                fontSize: "70px",
+                color: "#FF0000",
+                cursor: "pointer",
+              }}
             />
           )}
         </div>
+        <div className="controls" onClick={onControlsClick}>
+          <div className="slider">
+            <Slider
+              value={volume}
+              onChange={onVolumeChange}
+              style={{ width: "100px", marginLeft: "20px" }}
+            />
+          </div>
+          <div style={{ flex: 1 }}></div>
+          <div className="full-screen-btn">
+            {!fullScreen ? (
+              <RiFullscreenLine
+                size={30}
+                color={"white"}
+                onClick={goFullScreen}
+              />
+            ) : (
+              <RiFullscreenExitLine
+                size={30}
+                color={"white"}
+                onClick={exitFullScreen}
+              />
+            )}
+          </div>
+        </div>
       </div>
-    </div>
+    </React.Fragment>
   );
 }

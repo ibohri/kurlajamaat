@@ -59,46 +59,88 @@ function App() {
   return (
     <Router>
       <SettingsProvider>
-      <ProvideAuth>
-        <div className="full-size app-container">
-          <Switch>
-            <Route path="/login">
-              <Login />
-            </Route>
-            <Route path="/logout">
-              <Logout />
-            </Route>
+        <ProvideAuth>
+          <div className="full-size app-container">
+            <Switch>
+              <Route path="/login">
+                <Login />
+              </Route>
+              <Route path="/logout">
+                <Logout />
+              </Route>
 
-            <div className="child-container">
-              <TopBar />
-              <PrivateRoute path="/users">
-                <div style={{ padding: "1.5rem", maxWidth: 1100, margin: "0 auto" }}><Users /></div>
-              </PrivateRoute>
-              <PrivateRoute path="/logged-in-users">
-                <div style={{ padding: "1.5rem", maxWidth: 1100, margin: "0 auto" }}><LoggedInUsers /></div>
-              </PrivateRoute>
-              <PrivateRoute path="/settings">
-                <div style={{ padding: "1.5rem", maxWidth: 860, margin: "0 auto" }}><Settings /></div>
-              </PrivateRoute>
-              <PrivateRoute path="/editUser/:id?">
-                <div style={{ padding: "1.5rem", maxWidth: 700, margin: "0 auto" }}><AddUser /></div>
-              </PrivateRoute>
-              <PrivateRoute path="/twitch">
-                <TwitchHome />
-              </PrivateRoute>
-              <PrivateRoute path="/vimeo">
-                <Home />
-              </PrivateRoute>
-              <PrivateRoute path="/changePassword">
-                <div style={{ padding: "1.5rem", maxWidth: 700, margin: "0 auto" }}><ChangePassword /></div>
-              </PrivateRoute>
-              <PrivateRoute path="/" exact={true}>
-                <Home />
-              </PrivateRoute>
-            </div>
-          </Switch>
-        </div>
-      </ProvideAuth>
+              <div className="full-size">
+                <TopBar />
+                <div className="child-container">
+                  <PrivateRoute path="/users">
+                    <div
+                      style={{
+                        padding: "1.5rem",
+                        maxWidth: 1100,
+                        margin: "0 auto",
+                      }}
+                    >
+                      <Users />
+                    </div>
+                  </PrivateRoute>
+                  <PrivateRoute path="/logged-in-users">
+                    <div
+                      style={{
+                        padding: "1.5rem",
+                        maxWidth: 1100,
+                        margin: "0 auto",
+                      }}
+                    >
+                      <LoggedInUsers />
+                    </div>
+                  </PrivateRoute>
+                  <PrivateRoute path="/settings">
+                    <div
+                      style={{
+                        padding: "1.5rem",
+                        maxWidth: 860,
+                        margin: "0 auto",
+                      }}
+                    >
+                      <Settings />
+                    </div>
+                  </PrivateRoute>
+                  <PrivateRoute path="/editUser/:id?">
+                    <div
+                      style={{
+                        padding: "1.5rem",
+                        maxWidth: 700,
+                        margin: "0 auto",
+                      }}
+                    >
+                      <AddUser />
+                    </div>
+                  </PrivateRoute>
+                  <PrivateRoute path="/twitch">
+                    <TwitchHome />
+                  </PrivateRoute>
+                  <PrivateRoute path="/vimeo">
+                    <Home />
+                  </PrivateRoute>
+                  <PrivateRoute path="/changePassword">
+                    <div
+                      style={{
+                        padding: "1.5rem",
+                        maxWidth: 700,
+                        margin: "0 auto",
+                      }}
+                    >
+                      <ChangePassword />
+                    </div>
+                  </PrivateRoute>
+                  <PrivateRoute path="/" exact={true}>
+                    <Home />
+                  </PrivateRoute>
+                </div>
+              </div>
+            </Switch>
+          </div>
+        </ProvideAuth>
       </SettingsProvider>
     </Router>
   );
