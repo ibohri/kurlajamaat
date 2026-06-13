@@ -4,9 +4,11 @@ import { useAuth } from "../hooks/useProvideAuth";
 import "./Login.css";
 import { Form, Col, Row, Button } from "react-bootstrap";
 import { Redirect } from "react-router-dom";
+import { useSettings } from "../context/SettingsContext";
 
 export function Login() {
   let { signin, loading, user } = useAuth();
+  const { siteName, logo, contacts } = useSettings();
   const [validated, setValidated] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [showValidation, setShowValidation] = useState(false);
@@ -44,9 +46,9 @@ export function Login() {
   ) : (
     <div className="full-size login-container-bg">
       <div className="login-container">
-        <img className="mb-3 logo" alt="logo" src={"./logo.jpeg"}></img>
+        <img className="mb-3 logo" alt="logo" src={logo || "./logo.jpeg"}></img>
         <h2 className="mb-4" style={{ textAlign: "center" }}>
-          Anjuman-E-Zainee Kurla
+          {siteName || "Anjuman-E-Zainee Kurla"}
         </h2>
         <div className="mb-3">
           <Form noValidate validated={validated} onSubmit={onSubmit}>
@@ -107,10 +109,16 @@ export function Login() {
             </Button>
           </Form>
         </div>
-        <div style={{ lineHeight: "30px" }}>
-          <div style={{ fontWeight: "bold" }}>Contact Information</div>
-          <div>Burhanuddin Kundawala - +91-9833980159</div>
-        </div>
+        {contacts && contacts.length > 0 && (
+          <div style={{ lineHeight: "30px" }}>
+            <div style={{ fontWeight: "bold" }}>Contact Information</div>
+            {contacts.map((c, i) => (
+              <div key={i}>
+                {c.name}{c.name && c.phone ? " - " : ""}{c.phone}
+              </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );

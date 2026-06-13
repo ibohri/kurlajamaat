@@ -13,7 +13,7 @@ import { useAuth } from "../hooks/useProvideAuth";
 export function YouTube({ settings }) {
   const [isPlaying, setIsPlaying] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(!!youtubeChannelId);
   const [fullScreen, setFullScreen] = useState(false);
   const [volume, setVolume] = useState(80);
   const player = useRef();
@@ -121,8 +121,7 @@ export function YouTube({ settings }) {
       <div
         className="placeholder full-size"
         style={{
-          background:
-            isPlaying && !auth.user.audioOnly ? "transparent" : "black",
+          background: isPlaying ? "transparent" : "black",
         }}
       >
         {isLoading ? (

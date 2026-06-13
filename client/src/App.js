@@ -10,6 +10,7 @@ import { Users } from "./components/Users";
 import { Home } from "./components/Home";
 import { Login } from "./components/Login";
 import { useAuth, ProvideAuth } from "./hooks/useProvideAuth";
+import { SettingsProvider } from "./context/SettingsContext";
 import { TopBar } from "./components/TopBar";
 
 import "./App.css";
@@ -57,6 +58,7 @@ export function PrivateRoute({ children, ...rest }) {
 function App() {
   return (
     <Router>
+      <SettingsProvider>
       <ProvideAuth>
         <div className="full-size app-container">
           <Switch>
@@ -100,6 +102,7 @@ function App() {
           </Switch>
         </div>
       </ProvideAuth>
+      </SettingsProvider>
     </Router>
   );
 }

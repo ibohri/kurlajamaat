@@ -2,9 +2,11 @@ import { Container, Navbar, Nav } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { useAuth } from "../hooks/useProvideAuth";
 import { FiLogOut } from "react-icons/fi";
+import { useSettings } from "../context/SettingsContext";
 
 export function TopBar() {
   const auth = useAuth();
+  const { siteName } = useSettings();
   const logout = () => {
     auth.signout();
   };
@@ -18,7 +20,7 @@ export function TopBar() {
       >
         <Container fluid>
           <Navbar.Brand className="brand-name" as={Link} to="/">
-            Anjuman-E-Zainee Kurla
+            {siteName || "Anjuman-E-Zainee Kurla"}
           </Navbar.Brand>
 
           <Navbar.Toggle aria-controls="basic-navbar-nav" />

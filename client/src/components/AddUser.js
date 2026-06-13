@@ -8,7 +8,6 @@ export function AddUser() {
   const [user, setUser] = useState(null);
   const [errors, setErrors] = useState([]);
   const [isEnabled, setIsEnabled] = useState(true);
-  const [audioOnly, setAudioOnly] = useState(false);
   let { id } = useParams();
   const [isLoading, setIsLoading] = useState(!!id);
   const [isButtonLoading, setButtonIsLoading] = useState(false);
@@ -32,7 +31,6 @@ export function AddUser() {
           data[key] = value;
         }
         data.isEnabled = isEnabled;
-        data.audioOnly = audioOnly;
         if (id) {
           data["_id"] = id;
         }
@@ -54,7 +52,6 @@ export function AddUser() {
       if (data.isSuccess) {
         setUser(data.user);
         setIsEnabled(data.user.isEnabled);
-        setAudioOnly(data.user.audioOnly);
         setIsLoading(false);
       }
     };
@@ -72,7 +69,7 @@ export function AddUser() {
       validated={validated}
       onSubmit={handleSubmit}
     >
-      <Form.Group as={Row} className="mb-3" controlId="formPlaintextEmail">
+      <Form.Group as={Row} className="mb-3">
         <Form.Label column sm="2">
           Name
         </Form.Label>
@@ -89,7 +86,7 @@ export function AddUser() {
         </Col>
       </Form.Group>
 
-      <Form.Group as={Row} className="mb-3" controlId="formPlaintextPassword">
+      <Form.Group as={Row} className="mb-3">
         <Form.Label column sm="2">
           Role
         </Form.Label>
@@ -100,9 +97,10 @@ export function AddUser() {
           </Form.Select>
         </Col>
       </Form.Group>
-      <Form.Group as={Row} className="mb-3" controlId="formPlaintextPassword">
+
+      <Form.Group as={Row} className="mb-3">
         <Form.Label column sm="2">
-          User Name
+          ITS Number
         </Form.Label>
         <Col sm="10">
           <Form.Control
@@ -112,11 +110,12 @@ export function AddUser() {
             type="text"
           />
           <Form.Control.Feedback type="invalid">
-            Please enter username.
+            Please enter ITS Number.
           </Form.Control.Feedback>
         </Col>
       </Form.Group>
-      <Form.Group as={Row} className="mb-3" controlId="formPlaintextPassword">
+
+      <Form.Group as={Row} className="mb-3">
         <Form.Label column sm="2">
           Password
         </Form.Label>
@@ -127,7 +126,8 @@ export function AddUser() {
           </Form.Control.Feedback>
         </Col>
       </Form.Group>
-      <Form.Group as={Row} className="mb-3" controlId="formIsEnabled">
+
+      <Form.Group as={Row} className="mb-3">
         <Form.Label column sm="2">
           Is Enabled
         </Form.Label>
@@ -135,43 +135,24 @@ export function AddUser() {
           <Form.Check
             type="checkbox"
             checked={isEnabled}
-            onChange={() => {
-              setIsEnabled((prev) => !prev);
-            }}
+            onChange={() => setIsEnabled((prev) => !prev)}
           />
         </Col>
       </Form.Group>
-      <Form.Group as={Row} className="mb-3" controlId="formIsEnabled">
-        <Form.Label column sm="2">
-          Audio Only
-        </Form.Label>
-        <Col sm="10">
-          <Form.Check
-            type="checkbox"
-            checked={audioOnly}
-            onChange={() => {
-              setAudioOnly((prev) => !prev);
-            }}
-          />
-        </Col>
-      </Form.Group>
+
       {errors?.length > 0 && (
         <div className="errors">
           {errors.map((err) => (
             <Row>
               <Col sm="2"></Col>
-              <Col
-                sm="10"
-                style={{
-                  color: "red",
-                }}
-              >
+              <Col sm="10" style={{ color: "red" }}>
                 {err}
               </Col>
             </Row>
           ))}
         </div>
       )}
+
       <Button type="submit" disabled={isButtonLoading} variant="primary">
         {isButtonLoading ? "Loading…" : "Submit"}
       </Button>

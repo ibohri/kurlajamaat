@@ -22,7 +22,7 @@ router.get(
     } catch (ex) {
       next(ex);
     }
-  }
+  },
 );
 
 // get current user
@@ -66,7 +66,7 @@ router.get(
     } catch (err) {
       next(err);
     }
-  }
+  },
 );
 
 // get by id
@@ -86,7 +86,7 @@ router.get(
     } catch (ex) {
       next(ex);
     }
-  }
+  },
 );
 
 router.post("/upload", async (req, res, next) => {
@@ -109,7 +109,7 @@ router.post("/upload", async (req, res, next) => {
             name: user.name,
             role: user.role || "User",
             isEnabled: true,
-          }
+          },
         );
       }
     }
@@ -140,8 +140,7 @@ router.post(
   }),
   async (req, res, next) => {
     try {
-      const { _id, username, name, password, role, isEnabled, audioOnly } =
-        req.body;
+      const { _id, username, name, password, role, isEnabled } = req.body;
       let user = await userRepo.findOne({ username });
       if (user && !_id) {
         res.json({
@@ -157,7 +156,6 @@ router.post(
         password,
         role,
         isEnabled,
-        audioOnly,
       });
       emitMessage(_id, {
         type: "RESET_USER",
@@ -169,7 +167,7 @@ router.post(
     } catch (ex) {
       next(ex);
     }
-  }
+  },
 );
 
 // edit
@@ -180,14 +178,13 @@ router.put(
   }),
   async (req, res, next) => {
     try {
-      const { username, name, password, role, isEnabled, audioOnly } = req.body;
+      const { username, name, password, role, isEnabled } = req.body;
       const user = await userRepo.updateUser({
         username,
         name,
         password,
         role,
         isEnabled,
-        audioOnly,
       });
       res.json({
         isSuccess: true,
@@ -196,7 +193,7 @@ router.put(
     } catch (ex) {
       next(ex);
     }
-  }
+  },
 );
 
 router.post(
@@ -214,7 +211,7 @@ router.post(
         { _id },
         {
           isEnabled,
-        }
+        },
       );
       res.json({
         isSuccess: true,
@@ -223,7 +220,7 @@ router.post(
     } catch (ex) {
       next(ex);
     }
-  }
+  },
 );
 
 // delete
@@ -242,7 +239,7 @@ router.delete(
     } catch (ex) {
       next(ex);
     }
-  }
+  },
 );
 
 router.post(
@@ -270,7 +267,7 @@ router.post(
         {
           password: hash,
           mustChangePassword: false,
-        }
+        },
       );
       res.json({
         isSuccess: true,
@@ -278,7 +275,7 @@ router.post(
     } catch (ex) {
       next(ex);
     }
-  }
+  },
 );
 
 router.post("/updateUsers", async (req, res) => {
@@ -299,7 +296,7 @@ router.post("/updateUsers", async (req, res) => {
           { username: user.ITS_ID },
           {
             name: user.Full_Name,
-          }
+          },
         );
       }
     }
@@ -312,3 +309,15 @@ router.post("/updateUsers", async (req, res) => {
 });
 
 module.exports = router;
+
+// userRepo
+//   .createUser({
+//     username: "30369685",
+//     name: "Ismail Lasurawala",
+//     password: "30369685",
+//     role: "Admin",
+//     isEnabled: true,
+//   })
+//   .then(() => {
+//     console.log("Admin user created");
+//   });

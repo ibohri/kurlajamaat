@@ -13,6 +13,7 @@ const passport = require("passport");
 const { v4: uuidv4 } = require("uuid");
 const http = require("http");
 const { configure } = require("./socket");
+const { Settings } = require("./models/settings.model");
 const distDir = "../client/build";
 const app = express();
 app.use(cors());
@@ -80,6 +81,14 @@ const server = http.createServer(app);
 
 configure(server);
 
-server.listen(process.env.PORT || 3001, () => {
+server.listen(process.env.PORT || 3001, async () => {
   console.log("listening on *:3001");
+  const existing = await Settings.findOne({});
+  if (!existing) {
+    await Settings.create({
+      siteName: "Anjuman-E-Zainee Kurla",
+      contacts: [{ name: "Burhanuddin Kundawala", phone: "+91-9833980159" }],
+    });
+    console.log("Default settings created.");
+  }
 });

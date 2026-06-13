@@ -9,21 +9,12 @@ module.exports.createUser = async ({
   name,
   role,
   isEnabled,
-  audioOnly,
 }) => {
-  console.log("Creating user:", username, password, role, isEnabled, audioOnly);
   const passwordHash = await this.getPasswordHash(password);
   if (_id) {
     return await User.findOneAndUpdate(
       { _id },
-      {
-        username,
-        password: passwordHash,
-        name,
-        role,
-        isEnabled,
-        audioOnly,
-      },
+      { username, password: passwordHash, name, role, isEnabled },
       { upsert: true, new: true, setDefaultsOnInsert: true }
     );
   } else {
@@ -67,19 +58,11 @@ module.exports.updateUser = async ({
   name,
   role,
   isEnabled,
-  audioOnly,
 }) => {
   const passwordHash = await this.getPasswordHash(password);
   return await User.findOneAndUpdate(
     { username },
-    {
-      username,
-      password: passwordHash,
-      name,
-      role,
-      isEnabled,
-      audioOnly,
-    }
+    { username, password: passwordHash, name, role, isEnabled }
   );
 };
 
