@@ -1,4 +1,7 @@
-html, body { height: 100%; }
+html,
+body {
+  height: 100%;
+}
 
 .full-size {
   width: 100%;
@@ -7,9 +10,22 @@ html, body { height: 100%; }
 
 .app-container {
   background: var(--surface-alt);
+  display: flex;
+  flex-direction: column;
 }
 
 .child-container {
-  height: calc(100% - 64px);
+  flex: 1;
+  overflow-x: hidden;
   overflow-y: auto;
+  min-height: 0;
+}
+
+iframe {
+  width: 100%;
+  height: 100%;
+}
+.navbar-brand {
+  flex: 1;
+  max-width: auto !important;
 }

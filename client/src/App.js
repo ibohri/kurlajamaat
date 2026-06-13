@@ -69,7 +69,7 @@ function App() {
                 <Logout />
               </Route>
 
-              <div className="full-size">
+              <div className="full-size app-container">
                 <TopBar />
                 <div className="child-container">
                   <PrivateRoute path="/users">
