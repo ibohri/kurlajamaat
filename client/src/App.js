@@ -71,33 +71,30 @@ function App() {
 
             <div className="child-container">
               <TopBar />
-              <div className="full-size p-3">
-                <PrivateRoute path="/users">
-                  <Users />
-                </PrivateRoute>
-                <PrivateRoute path="/logged-in-users">
-                  <LoggedInUsers />
-                </PrivateRoute>
-                <PrivateRoute path="/settings">
-                  <Settings />
-                </PrivateRoute>
-                <PrivateRoute path="/editUser/:id?">
-                  <AddUser />
-                </PrivateRoute>
-                <PrivateRoute path="/twitch">
-                  <TwitchHome />
-                </PrivateRoute>
-                <PrivateRoute path="/vimeo">
-                  <Home />
-                </PrivateRoute>
-                <PrivateRoute path="/changePassword">
-                  <ChangePassword />
-                </PrivateRoute>
-
-                <PrivateRoute path="/" exact={true}>
-                  <Home />
-                </PrivateRoute>
-              </div>
+              <PrivateRoute path="/users">
+                <div style={{ padding: "1.5rem", maxWidth: 1100, margin: "0 auto" }}><Users /></div>
+              </PrivateRoute>
+              <PrivateRoute path="/logged-in-users">
+                <div style={{ padding: "1.5rem", maxWidth: 1100, margin: "0 auto" }}><LoggedInUsers /></div>
+              </PrivateRoute>
+              <PrivateRoute path="/settings">
+                <div style={{ padding: "1.5rem", maxWidth: 860, margin: "0 auto" }}><Settings /></div>
+              </PrivateRoute>
+              <PrivateRoute path="/editUser/:id?">
+                <div style={{ padding: "1.5rem", maxWidth: 700, margin: "0 auto" }}><AddUser /></div>
+              </PrivateRoute>
+              <PrivateRoute path="/twitch">
+                <TwitchHome />
+              </PrivateRoute>
+              <PrivateRoute path="/vimeo">
+                <Home />
+              </PrivateRoute>
+              <PrivateRoute path="/changePassword">
+                <div style={{ padding: "1.5rem", maxWidth: 700, margin: "0 auto" }}><ChangePassword /></div>
+              </PrivateRoute>
+              <PrivateRoute path="/" exact={true}>
+                <Home />
+              </PrivateRoute>
             </div>
           </Switch>
         </div>

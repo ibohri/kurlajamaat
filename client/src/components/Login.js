@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Loading } from "./Loading";
 import { useAuth } from "../hooks/useProvideAuth";
 import "./Login.css";
-import { Form, Col, Row, Button } from "react-bootstrap";
+import { Form, Button } from "react-bootstrap";
 import { Redirect } from "react-router-dom";
 import { useSettings } from "../context/SettingsContext";
 
@@ -13,108 +13,79 @@ export function Login() {
   const [isLoading, setIsLoading] = useState(false);
   const [showValidation, setShowValidation] = useState(false);
 
-  let onSubmit = async (e) => {
+  const onSubmit = async (e) => {
     try {
       e.preventDefault();
-      const form = e.currentTarget;
       e.stopPropagation();
+      const form = e.currentTarget;
       if (form.checkValidity() === false) {
         setValidated(true);
         setShowValidation(false);
       } else {
-        const userName = e.target.username.value;
-        const password = e.target.password.value;
         setIsLoading(true);
-        const isSuccess = await signin(userName, password);
-        if (!isSuccess) {
-          setShowValidation(true);
-        }
+        const isSuccess = await signin(e.target.username.value, e.target.password.value);
+        if (!isSuccess) setShowValidation(true);
       }
     } finally {
       setIsLoading(false);
     }
   };
 
-  return user ? (
-    <Redirect
-      to={{
-        pathname: "/",
-      }}
-    ></Redirect>
-  ) : loading ? (
-    <Loading />
-  ) : (
+  if (user) return <Redirect to={{ pathname: "/" }} />;
+  if (loading) return <Loading />;
+
+  return (
     <div className="full-size login-container-bg">
       <div className="login-container">
-        <img className="mb-3 logo" alt="logo" src={logo || "./logo.jpeg"}></img>
-        <h2 className="mb-4" style={{ textAlign: "center" }}>
-          {siteName || "Anjuman-E-Zainee Kurla"}
-        </h2>
-        <div className="mb-3">
-          <Form noValidate validated={validated} onSubmit={onSubmit}>
-            <Form.Group
-              as={Row}
-              className="mb-3"
-              controlId="formPlaintextEmail"
-            >
-              <Form.Label column sm="12">
-                HOF ITS Number
-              </Form.Label>
-              <Col sm="12">
-                <Form.Control
-                  required
-                  name="username"
-                  onInput={() => setShowValidation(false)}
-                  type="text"
-                  placeholder="HOF ITS Number"
-                />
-                <Form.Control.Feedback type="invalid">
-                  Please enter username.
-                </Form.Control.Feedback>
-              </Col>
-            </Form.Group>
+        <img className="logo" alt="logo" src={logo || "./logo.jpeg"} />
+        <h1 className="login-title">{siteName || "Anjuman-E-Zainee Kurla"}</h1>
 
-            <Form.Group
-              as={Row}
-              className="mb-3"
-              controlId="formPlaintextPassword"
-            >
-              <Form.Label column sm="12">
-                Password
-              </Form.Label>
-              <Col sm="12">
-                <Form.Control
-                  required
-                  onInput={() => setShowValidation(false)}
-                  name="password"
-                  type="password"
-                  placeholder="Password"
-                />
-                <Form.Control.Feedback type="invalid">
-                  Please enter password.
-                </Form.Control.Feedback>
-              </Col>
-            </Form.Group>
-            {showValidation && (
-              <Row className="mb-3">
-                <Col sm="12">
-                  <div class="error-message">
-                    Username or Password is invalid
-                  </div>
-                </Col>
-              </Row>
-            )}
-            <Button type="submit" disabled={isLoading} variant="primary">
-              {isLoading ? "Loading…" : "Submit"}
-            </Button>
-          </Form>
-        </div>
+        <Form noValidate validated={validated} onSubmit={onSubmit}>
+          <Form.Group className="mb-3">
+            <Form.Label className="login-form-label">HOF ITS Number</Form.Label>
+            <Form.Control
+              required
+              name="username"
+              type="text"
+              placeholder="Enter your ITS Number"
+              onInput={() => setShowValidation(false)}
+            />
+            <Form.Control.Feedback type="invalid">
+              Please enter your ITS Number.
+            </Form.Control.Feedback>
+          </Form.Group>
+
+          <Form.Group className="mb-3">
+            <Form.Label className="login-form-label">Password</Form.Label>
+            <Form.Control
+              required
+              name="password"
+              type="password"
+              placeholder="Enter your password"
+              onInput={() => setShowValidation(false)}
+            />
+            <Form.Control.Feedback type="invalid">
+              Please enter your password.
+            </Form.Control.Feedback>
+          </Form.Group>
+
+          {showValidation && (
+            <div className="error-message mb-3">
+              ITS Number or Password is invalid.
+            </div>
+          )}
+
+          <Button type="submit" disabled={isLoading} className="login-btn">
+            {isLoading ? "Signing in…" : "Sign In"}
+          </Button>
+        </Form>
+
         {contacts && contacts.length > 0 && (
-          <div style={{ lineHeight: "30px" }}>
-            <div style={{ fontWeight: "bold" }}>Contact Information</div>
+          <div className="contact-info">
+            <div className="contact-info-title">Contact Information</div>
             {contacts.map((c, i) => (
-              <div key={i}>
-                {c.name}{c.name && c.phone ? " - " : ""}{c.phone}
+              <div className="contact-item" key={i}>
+                <span>{c.name}{c.name && c.phone ? " — " : ""}{c.phone}</span>
               </div>
             ))}
           </div>

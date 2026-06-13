@@ -1,141 +1,115 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef } from "react";
 import api from "../utils/api.util";
-import "./Login.css";
 import { Loading } from "./Loading";
-import { useHistory, Redirect } from "react-router-dom";
-import { Form, Col, Row, Button } from "react-bootstrap";
+import { useHistory } from "react-router-dom";
+import { Form, Button } from "react-bootstrap";
 import { useAuth } from "../hooks/useProvideAuth";
 
 export function ChangePassword() {
   const [validated, setValidated] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [showValidation, setShowValidation] = useState(false);
-  const [showInvalidPasswordValidation, setShowInvalidPasswordValidation] =
-    useState(false);
+  const [passwordMismatch, setPasswordMismatch] = useState(false);
+  const [incorrectPassword, setIncorrectPassword] = useState(false);
   const history = useHistory();
-  const password = useRef();
-  const confimPassword = useRef();
+  const newPassword = useRef("");
+  const confirmPassword = useRef("");
   const auth = useAuth();
-
-  const onPasswordChange = (e) => {
-    password.current = e.target.value;
-  };
-  const onConfirmPasswordChange = (e) => {
-    confimPassword.current = e.target.value;
-  };
-
-  useEffect(() => {
-    if (password.current && confimPassword.current) {
-      setShowValidation(password.current === confimPassword.current);
-    } else {
-      setShowValidation(false);
-    }
-  }, [password, confimPassword]);
 
   const onSubmit = async (e) => {
     try {
       e.preventDefault();
-      const form = e.currentTarget;
       e.stopPropagation();
+      const form = e.currentTarget;
+      setPasswordMismatch(false);
+      setIncorrectPassword(false);
+
       if (form.checkValidity() === false) {
         setValidated(true);
-        setShowValidation(false);
-      } else if (password.current !== confimPassword.current) {
-        setShowValidation(true);
-      } else {
-        const formData = new FormData(e.currentTarget);
-        const data = {};
-        for (let [key, value] of formData.entries()) {
-          data[key] = value;
-        }
-        setIsLoading(true);
-        const { data: response } = await api.post("/api/user/changePassword", {
-          password: data.newPassword,
-          oldPassword: data.oldPassword,
-        });
-        if (response.isSuccess) {
-          auth.updateUser({
-            ...auth.user,
-            mustChangePassword: false,
-          });
-          history.push("/");
-        } else if (response.errors?.length) {
-          setShowInvalidPasswordValidation(true);
-        }
+        return;
+      }
+      if (newPassword.current !== confirmPassword.current) {
+        setPasswordMismatch(true);
+        return;
+      }
+
+      setIsLoading(true);
+      const formData = new FormData(form);
+      const { data: response } = await api.post("/api/user/changePassword", {
+        password: formData.get("newPassword"),
+        oldPassword: formData.get("oldPassword"),
+      });
+
+      if (response.isSuccess) {
+        auth.updateUser({ ...auth.user, mustChangePassword: false });
+        history.push("/");
+      } else if (response.errors?.length) {
+        setIncorrectPassword(true);
       }
     } finally {
       setIsLoading(false);
     }
   };
 
+  const labelStyle = { fontWeight: 600, color: "var(--text-secondary)", fontSize: "0.88rem" };
+
   return (
-    <div className="full-size">
-      <Form noValidate validated={validated} onSubmit={onSubmit}>
-        <Form.Group as={Row} className="mb-3" controlId="formPlaintextEmail">
-          <Form.Label column sm="12">
-            Old Password
-          </Form.Label>
-          <Col sm="12">
-            <Form.Control
-              required
-              name="oldPassword"
-              onInput={(e) => setShowInvalidPasswordValidation(false)}
-              type="password"
-              placeholder="Old Password"
-            />
-            <Form.Control.Feedback type="invalid">
-              Please enter password.
-            </Form.Control.Feedback>
-            {showInvalidPasswordValidation && (
-              <div class="error-message">Password is incorrect.</div>
-            )}
-          </Col>
-        </Form.Group>
-        <Form.Group as={Row} className="mb-3" controlId="formPlaintextEmail">
-          <Form.Label column sm="12">
-            New Password
-          </Form.Label>
-          <Col sm="12">
-            <Form.Control
-              required
-              name="newPassword"
-              onInput={(e) => onPasswordChange(e)}
-              type="text"
-              placeholder="Password"
-            />
-            <Form.Control.Feedback type="invalid">
-              Please enter new password.
-            </Form.Control.Feedback>
-          </Col>
+    <div className="page-card">
+      <div className="page-title">Change Password</div>
+      <Form noValidate validated={validated} onSubmit={onSubmit} style={{ maxWidth: 480 }}>
+        <Form.Group className="mb-3">
+          <Form.Label style={labelStyle}>Current Password</Form.Label>
+          <Form.Control
+            required
+            name="oldPassword"
+            type="password"
+            placeholder="Enter current password"
+            onInput={() => setIncorrectPassword(false)}
+          />
+          <Form.Control.Feedback type="invalid">Please enter your current password.</Form.Control.Feedback>
+          {incorrectPassword && (
+            <div style={{ color: "var(--danger)", fontSize: "0.85rem", marginTop: 4 }}>
+              Current password is incorrect.
+            </div>
+          )}
         </Form.Group>
 
-        <Form.Group as={Row} className="mb-3" controlId="formPlaintextPassword">
-          <Form.Label column sm="12">
-            Confirm Password
-          </Form.Label>
-          <Col sm="12">
-            <Form.Control
-              required
-              onInput={(e) => onConfirmPasswordChange(e)}
-              name="confirmPassword"
-              type="password"
-              placeholder="Confirm Password"
-            />
-            <Form.Control.Feedback type="invalid">
-              Please confirm password.
-            </Form.Control.Feedback>
-          </Col>
+        <Form.Group className="mb-3">
+          <Form.Label style={labelStyle}>New Password</Form.Label>
+          <Form.Control
+            required
+            name="newPassword"
+            type="password"
+            placeholder="Enter new password"
+            onInput={(e) => { newPassword.current = e.target.value; setPasswordMismatch(false); }}
+          />
+          <Form.Control.Feedback type="invalid">Please enter a new password.</Form.Control.Feedback>
         </Form.Group>
-        {showValidation && (
-          <Row className="mb-3">
-            <Col sm="12">
-              <div class="error-message">Password does not match.</div>
-            </Col>
-          </Row>
-        )}
-        <Button type="submit" disabled={isLoading} variant="primary">
-          {isLoading ? "Loading…" : "Submit"}
-        </Button>
+
+        <Form.Group className="mb-3">
+          <Form.Label style={labelStyle}>Confirm New Password</Form.Label>
+          <Form.Control
+            required
+            name="confirmPassword"
+            type="password"
+            placeholder="Confirm new password"
+            onInput={(e) => { confirmPassword.current = e.target.value; setPasswordMismatch(false); }}
+          />
+          <Form.Control.Feedback type="invalid">Please confirm your new password.</Form.Control.Feedback>
+          {passwordMismatch && (
+            <div style={{ color: "var(--danger)", fontSize: "0.85rem", marginTop: 4 }}>
+              Passwords do not match.
+            </div>
+          )}
+        </Form.Group>
+
+        <div style={{ borderTop: "1px solid var(--border)", paddingTop: "1.25rem", marginTop: "0.5rem" }}>
+          <Button type="submit" disabled={isLoading} variant="primary" style={{ minWidth: 140 }}>
+            {isLoading ? "Updating…" : "Update Password"}
+          </Button>
+          <Button variant="outline-secondary" className="ms-3" onClick={() => history.push("/")} style={{ minWidth: 80 }}>
+            Cancel
+          </Button>
+        </div>
       </Form>
     </div>
   );

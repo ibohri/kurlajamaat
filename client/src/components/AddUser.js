@@ -27,13 +27,9 @@ export function AddUser() {
         setButtonIsLoading(true);
         const formData = new FormData(event.currentTarget);
         const data = {};
-        for (let [key, value] of formData.entries()) {
-          data[key] = value;
-        }
+        for (let [key, value] of formData.entries()) data[key] = value;
         data.isEnabled = isEnabled;
-        if (id) {
-          data["_id"] = id;
-        }
+        if (id) data["_id"] = id;
         const response = await api.post("/api/user", data);
         if (response.data.isSuccess) {
           history.push("/users");
@@ -58,107 +54,75 @@ export function AddUser() {
     id && getUser();
   }, [id]);
 
-  const onCancelClick = () => history.push("/users");
+  if (isLoading) return <Loading />;
 
-  return isLoading ? (
-    <Loading />
-  ) : (
-    <Form
-      onChange={onChange}
-      noValidate
-      validated={validated}
-      onSubmit={handleSubmit}
-    >
-      <Form.Group as={Row} className="mb-3">
-        <Form.Label column sm="2">
-          Name
-        </Form.Label>
-        <Col sm="10">
-          <Form.Control
-            defaultValue={user && user.name}
-            required
-            name="name"
-            type="text"
-          />
-          <Form.Control.Feedback type="invalid">
-            Please enter name.
-          </Form.Control.Feedback>
-        </Col>
-      </Form.Group>
+  const field = (label, content) => (
+    <Form.Group as={Row} className="mb-3 align-items-center">
+      <Form.Label column sm="3" style={{ fontWeight: 600, color: "var(--text-secondary)", fontSize: "0.88rem" }}>
+        {label}
+      </Form.Label>
+      <Col sm="9">{content}</Col>
+    </Form.Group>
+  );
 
-      <Form.Group as={Row} className="mb-3">
-        <Form.Label column sm="2">
-          Role
-        </Form.Label>
-        <Col sm="10">
-          <Form.Select defaultValue={user && user.role} name="role">
+  return (
+    <div className="page-card">
+      <div className="page-title">{id ? "Edit User" : "Add User"}</div>
+      <Form onChange={onChange} noValidate validated={validated} onSubmit={handleSubmit}>
+        {field("Name",
+          <>
+            <Form.Control defaultValue={user?.name} required name="name" type="text" placeholder="Full name" />
+            <Form.Control.Feedback type="invalid">Please enter a name.</Form.Control.Feedback>
+          </>
+        )}
+
+        {field("Role",
+          <Form.Select defaultValue={user?.role || "User"} name="role">
             <option value="User">User</option>
             <option value="Admin">Admin</option>
           </Form.Select>
-        </Col>
-      </Form.Group>
+        )}
 
-      <Form.Group as={Row} className="mb-3">
-        <Form.Label column sm="2">
-          ITS Number
-        </Form.Label>
-        <Col sm="10">
-          <Form.Control
-            defaultValue={user && user.username}
-            required
-            name="username"
-            type="text"
-          />
-          <Form.Control.Feedback type="invalid">
-            Please enter ITS Number.
-          </Form.Control.Feedback>
-        </Col>
-      </Form.Group>
+        {field("ITS Number",
+          <>
+            <Form.Control defaultValue={user?.username} required name="username" type="text" placeholder="ITS Number" />
+            <Form.Control.Feedback type="invalid">Please enter an ITS Number.</Form.Control.Feedback>
+          </>
+        )}
 
-      <Form.Group as={Row} className="mb-3">
-        <Form.Label column sm="2">
-          Password
-        </Form.Label>
-        <Col sm="10">
-          <Form.Control required name="password" type="password" />
-          <Form.Control.Feedback type="invalid">
-            Please enter password.
-          </Form.Control.Feedback>
-        </Col>
-      </Form.Group>
+        {field("Password",
+          <>
+            <Form.Control required name="password" type="password" placeholder="Password" />
+            <Form.Control.Feedback type="invalid">Please enter a password.</Form.Control.Feedback>
+          </>
+        )}
 
-      <Form.Group as={Row} className="mb-3">
-        <Form.Label column sm="2">
-          Is Enabled
-        </Form.Label>
-        <Col sm="10">
+        {field("Enabled",
           <Form.Check
-            type="checkbox"
+            type="switch"
             checked={isEnabled}
-            onChange={() => setIsEnabled((prev) => !prev)}
+            onChange={() => setIsEnabled((p) => !p)}
+            label={isEnabled ? "Active" : "Disabled"}
           />
-        </Col>
-      </Form.Group>
+        )}
 
-      {errors?.length > 0 && (
-        <div className="errors">
-          {errors.map((err) => (
-            <Row>
-              <Col sm="2"></Col>
-              <Col sm="10" style={{ color: "red" }}>
-                {err}
-              </Col>
-            </Row>
-          ))}
+        {errors?.length > 0 && (
+          <div className="mb-3">
+            {errors.map((err, i) => (
+              <div key={i} style={{ color: "var(--danger)", fontSize: "0.88rem" }}>{err}</div>
+            ))}
+          </div>
+        )}
+
+        <div style={{ borderTop: "1px solid var(--border)", paddingTop: "1.25rem", marginTop: "0.5rem" }}>
+          <Button type="submit" disabled={isButtonLoading} variant="primary" style={{ minWidth: 120 }}>
+            {isButtonLoading ? "Saving…" : "Save User"}
+          </Button>
+          <Button variant="outline-secondary" className="ms-3" onClick={() => history.push("/users")} style={{ minWidth: 80 }}>
+            Cancel
+          </Button>
         </div>
-      )}
-
-      <Button type="submit" disabled={isButtonLoading} variant="primary">
-        {isButtonLoading ? "Loading…" : "Submit"}
-      </Button>
-      <Button variant="secondary" className="m-3" onClick={onCancelClick}>
-        Cancel
-      </Button>
-    </Form>
+      </Form>
+    </div>
   );
 }

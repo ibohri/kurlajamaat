@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Table, Button, Modal } from "react-bootstrap";
+import { Button, Modal } from "react-bootstrap";
 import { FiEdit2 } from "react-icons/fi";
 import { AiOutlineDelete } from "react-icons/ai";
 import "./Users.css";
@@ -9,7 +9,6 @@ import { Loading } from "./Loading";
 import axios from "axios";
 import debounce from "debounce";
 import { utils, writeFile, read } from "xlsx";
-import { set } from "mongoose";
 
 export function Users() {
   const [users, setUsers] = useState([]);
@@ -18,27 +17,19 @@ export function Users() {
   const [show, setShow] = useState(false);
   const history = useHistory();
   const selectedUserId = useRef(null);
-  const [searchText, setSearchText] = useState();
+  const [searchText, setSearchText] = useState("");
   const [isDeleteButtonLoading, setIsDeleteButtonLoading] = useState(false);
-  const handleClose = () => {
-    selectedUserId.current = null;
-    setShow(false);
-  };
-  const onDeleteClick = (userId) => {
-    selectedUserId.current = userId;
-    setShow(true);
-  };
+
+  const handleClose = () => { selectedUserId.current = null; setShow(false); };
+  const onDeleteClick = (userId) => { selectedUserId.current = userId; setShow(true); };
 
   const deleteUser = async () => {
     setIsDeleteButtonLoading(true);
     await api.delete(`/api/user/${selectedUserId.current}`);
-
-    setUsers((prevUsers) => {
-      const usersToSet = usersRef.current.filter(
-        (user) => user._id !== selectedUserId.current
-      );
-      usersRef.current = usersToSet;
-      return usersToSet;
+    setUsers(() => {
+      const next = usersRef.current.filter((u) => u._id !== selectedUserId.current);
+      usersRef.current = next;
+      return next;
     });
     setSearchText("");
     handleClose();
@@ -48,10 +39,7 @@ export function Users() {
   useEffect(() => {
     const fillUsers = async () => {
       const { data } = await api.get("/api/user");
-      if (data.isSuccess) {
-        setUsers(data.users);
-        usersRef.current = data.users;
-      }
+      if (data.isSuccess) { setUsers(data.users); usersRef.current = data.users; }
       setIsLoading(false);
     };
     fillUsers();
@@ -60,54 +48,40 @@ export function Users() {
   const search = debounce((text) => {
     if (!text) setUsers(usersRef.current);
     else {
-      text = text.toLowerCase();
-      setUsers(
-        usersRef.current.filter(
-          (user) =>
-            user.username.toLowerCase().indexOf(text) > -1 ||
-            user.name.toLowerCase().indexOf(text) > -1
-        )
-      );
+      const t = text.toLowerCase();
+      setUsers(usersRef.current.filter(
+        (u) => u.username.toLowerCase().includes(t) || u.name.toLowerCase().includes(t)
+      ));
     }
   }, 100);
 
   const downloadExcel = () => {
-    const filteredUsers = usersRef.current.map(
-      ({ username, password, name, role }) => ({
-        username,
-        password,
-        name,
-        role,
-      })
-    );
-    const worksheet = utils.json_to_sheet(filteredUsers);
-    const workbook = utils.book_new();
-    utils.book_append_sheet(workbook, worksheet, "Users");
-    writeFile(workbook, "users.xlsx");
+    const rows = usersRef.current.map(({ username, password, name, role }) => ({ username, password, name, role }));
+    const ws = utils.json_to_sheet(rows);
+    const wb = utils.book_new();
+    utils.book_append_sheet(wb, ws, "Users");
+    writeFile(wb, "users.xlsx");
   };
 
   const uploadExcel = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
-
     const reader = new FileReader();
     reader.onload = async (event) => {
       const usersData = new Uint8Array(event.target.result);
       const workbook = read(usersData, { type: "array" });
-      const sheetName = workbook.SheetNames[0];
-      const worksheet = workbook.Sheets[sheetName];
+      const worksheet = workbook.Sheets[workbook.SheetNames[0]];
       const jsonData = utils.sheet_to_json(worksheet);
       setIsLoading(true);
-      // Assuming the API endpoint to upload users is /api/user/upload
       await api.post("/api/user/upload", jsonData);
-      const { data: updatedData } = await api.get("/api/user");
-      if (updatedData.isSuccess) {
+      const { data } = await api.get("/api/user");
+      if (data.isSuccess) {
         setSearchText("");
-        setUsers(updatedData.users);
-        setIsLoading(false);
-        usersRef.current = updatedData.users;
-        document.getElementById("fileInput").value = ""; // Clear the file input
+        setUsers(data.users);
+        usersRef.current = data.users;
+        document.getElementById("fileInput").value = "";
       }
+      setIsLoading(false);
     };
     reader.readAsArrayBuffer(file);
   };
@@ -116,10 +90,7 @@ export function Users() {
     setIsLoading(true);
     await api.delete("/api/user/delete-all");
     const { data } = await api.get("/api/user");
-    if (data.isSuccess) {
-      setUsers(data.users);
-      usersRef.current = data.users;
-    }
+    if (data.isSuccess) { setUsers(data.users); usersRef.current = data.users; }
     setSearchText("");
     setIsLoading(false);
   };
@@ -130,141 +101,111 @@ export function Users() {
     search(e.target.value);
   };
 
-  const onAddUserClick = () => {
-    history.push("/editUser");
-  };
-
-  const onEditUserClick = (userId) => {
-    history.push(`/editUser/${userId}`);
-  };
-  const onEnabledCheckboxChange = async (user, index) => {
+  const onEnabledCheckboxChange = async (user) => {
     setIsLoading(true);
-    user = {
-      ...user,
-      isEnabled: !user.isEnabled,
-    };
-    await axios.post("/api/user/enable-disable-user", user);
-    const updatesUsers = usersRef.current.map((u) => {
-      if (u._id === user._id) {
-        return user;
-      }
-      return u;
-    });
+    const updated = { ...user, isEnabled: !user.isEnabled };
+    await axios.post("/api/user/enable-disable-user", updated);
+    const next = usersRef.current.map((u) => (u._id === user._id ? updated : u));
     setSearchText("");
-    setUsers(updatesUsers);
-    usersRef.current = updatesUsers;
-
+    setUsers(next);
+    usersRef.current = next;
     setIsLoading(false);
   };
 
-  return isLoading ? (
-    <Loading />
-  ) : (
-    <div>
-      <Button
-        onClick={onAddUserClick}
-        className="ml-auto mb-3"
-        variant="primary"
-      >
-        Add User +
-      </Button>
-      <Button
-        className="ml-auto mb-3 ml-3"
-        variant="secondary"
-        onClick={downloadExcel}
-      >
-        Download Users
-      </Button>
-      <Button
-        className="ml-auto mb-3 ml-3"
-        variant="secondary"
-        onClick={() => document.getElementById("fileInput").click()}
-      >
-        Upload Users
-      </Button>
-      <input
-        id="fileInput"
-        type="file"
-        accept=".xlsx, .xls"
-        style={{ display: "none" }}
-        onChange={uploadExcel}
-      />
-      <Button
-        className="ml-auto mb-3 ml-3"
-        variant="secondary"
-        onClick={deleteAllUsers}
-        disabled={users.length <= 1} // Disable if only admin exists
-      >
-        Delete All Users (Except Admin)
-      </Button>
+  if (isLoading) return <Loading />;
+
+  return (
+    <div className="page-card">
+      <div className="page-title">Users</div>
+
+      <div className="d-flex flex-wrap align-items-center mb-1">
+        <Button className="toolbar-btn" variant="primary" onClick={() => history.push("/editUser")}>
+          + Add User
+        </Button>
+        <Button className="toolbar-btn" variant="outline-secondary" onClick={downloadExcel}>
+          Download
+        </Button>
+        <Button className="toolbar-btn" variant="outline-secondary" onClick={() => document.getElementById("fileInput").click()}>
+          Upload
+        </Button>
+        <input id="fileInput" type="file" accept=".xlsx,.xls" style={{ display: "none" }} onChange={uploadExcel} />
+        <Button
+          className="toolbar-btn"
+          variant="outline-danger"
+          onClick={deleteAllUsers}
+          disabled={users.length <= 1}
+        >
+          Delete All (Non-Admin)
+        </Button>
+      </div>
+
       <input
         type="text"
-        className="form-control mb-3"
+        className="search-input"
         value={searchText}
-        placeholder="Search"
+        placeholder="Search by name or ITS number…"
         onChange={searchUsers}
-      ></input>
+      />
 
-      <Table striped bordered hover>
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>Name</th>
-            <th>User Name</th>
-            <th>Role</th>
-            <th>Is Enabled</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          {users.map((user, index) => {
-            return (
-              <tr key={index}>
-                <td>{index + 1}</td>
-                <td>{user.name}</td>
-                <td>{user.username}</td>
-                <td>{user.role}</td>
+      <div style={{ overflowX: "auto", borderRadius: 10, border: "1px solid var(--border)" }}>
+        <table className="users-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Name</th>
+              <th>ITS Number</th>
+              <th>Role</th>
+              <th>Enabled</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            {users.map((user, index) => (
+              <tr key={user._id}>
+                <td style={{ color: "var(--text-muted)", width: 48 }}>{index + 1}</td>
+                <td style={{ fontWeight: 500 }}>{user.name}</td>
+                <td style={{ color: "var(--text-secondary)", fontFamily: "monospace" }}>{user.username}</td>
+                <td>
+                  <span className={`role-badge role-badge--${user.role.toLowerCase()}`}>{user.role}</span>
+                </td>
                 <td>
                   {user.role !== "Admin" && (
                     <input
                       type="checkbox"
-                      className="enable-checkbox"
+                      className="enable-toggle"
                       checked={user.isEnabled}
-                      onChange={() => onEnabledCheckboxChange(user, index)}
+                      onChange={() => onEnabledCheckboxChange(user)}
                     />
                   )}
                 </td>
-                <td width="140px">
-                  <FiEdit2
-                    onClick={() => onEditUserClick(user._id)}
-                    className="icon"
-                  />
-                  <AiOutlineDelete
-                    color="red"
-                    className="icon"
-                    onClick={() => onDeleteClick(user._id)}
-                  />
+                <td style={{ whiteSpace: "nowrap" }}>
+                  <FiEdit2 size={17} className="icon" onClick={() => history.push(`/editUser/${user._id}`)} />
+                  <AiOutlineDelete size={19} color="var(--danger)" className="icon" onClick={() => onDeleteClick(user._id)} />
                 </td>
               </tr>
-            );
-          })}
-        </tbody>
-      </Table>
-      <Modal centered={true} show={show} onHide={handleClose}>
-        <Modal.Header closeButton>
-          <Modal.Title>Confirmation</Modal.Title>
+            ))}
+            {users.length === 0 && (
+              <tr>
+                <td colSpan={6} style={{ textAlign: "center", color: "var(--text-muted)", padding: "2rem" }}>
+                  No users found.
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
+
+      <Modal centered show={show} onHide={handleClose}>
+        <Modal.Header closeButton style={{ borderBottom: "1px solid var(--border)" }}>
+          <Modal.Title style={{ fontSize: "1rem", fontWeight: 700 }}>Delete User</Modal.Title>
         </Modal.Header>
-        <Modal.Body>Are you sure you want to delete the user?</Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose}>
-            Cancel
-          </Button>
-          <Button
-            variant="primary"
-            disabled={isDeleteButtonLoading}
-            onClick={deleteUser}
-          >
-            {isDeleteButtonLoading ? "Loading..." : "Confirm"}
+        <Modal.Body style={{ padding: "1.25rem 1.5rem" }}>
+          Are you sure you want to delete this user? This cannot be undone.
+        </Modal.Body>
+        <Modal.Footer style={{ borderTop: "1px solid var(--border)" }}>
+          <Button variant="outline-secondary" onClick={handleClose}>Cancel</Button>
+          <Button variant="danger" disabled={isDeleteButtonLoading} onClick={deleteUser}>
+            {isDeleteButtonLoading ? "Deleting…" : "Delete"}
           </Button>
         </Modal.Footer>
       </Modal>
